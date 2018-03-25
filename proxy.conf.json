@@ -1,0 +1,7 @@
+{
+  "/wp-json": {
+  "target": "http://wpdev.paultaku.tw",
+  "secure": false
+ }
+}
+
