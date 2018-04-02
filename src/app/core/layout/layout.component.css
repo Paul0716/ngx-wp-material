@@ -13,5 +13,9 @@
 }
 
 mat-sidenav {
-  width: 120px;
+  width: 180px;
+}
+
+.fill-remain-space {
+  flex: 1 1 auto;
 }

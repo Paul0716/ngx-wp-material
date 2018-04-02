@@ -1,14 +1,28 @@
 <div class="app-container">
   <mat-toolbar color="primary">
-    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
-    <!-- <h1 class="example-app-name"></h1> -->
+    <button
+      type="button"
+      mat-icon-button
+      (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <span class="fill-remain-space"></span>
+
+    <button
+      type="button"
+      mat-icon-button
+    >
+      <mat-icon class="material-icons">account_box</mat-icon>
+    </button>
+
   </mat-toolbar>
   <mat-sidenav-container
     class="app-sidenav-container">
     <!-- 側邊欄 -->
     <mat-sidenav
       #snav
-      [mode]="'side'"
+      mode="side"
       [fixedInViewport]="true"
       [(opened)]="isOpen"
       fixedTopGap="64">
@@ -28,8 +42,7 @@
 
     <!-- 網站內容 -->
     <mat-sidenav-content>
-      <!-- <router-outlet></router-outlet> -->
-      <p>hello world!</p>
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
 
   </mat-sidenav-container>

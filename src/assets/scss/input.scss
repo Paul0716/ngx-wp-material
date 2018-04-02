@@ -1,0 +1,11 @@
+@mixin input-group($textColor, $holderColor, $width) {
+
+  color: $textColor;
+  mat-form-field {
+    width: 100%;
+  }
+
+  button, input {
+    color: initial;
+  }
+}

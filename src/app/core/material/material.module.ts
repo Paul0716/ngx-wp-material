@@ -34,6 +34,8 @@ import {
   MatStepperModule,
   MatFormFieldModule,
   MatFormField,
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
 } from '@angular/material';
 
 @NgModule({
@@ -106,9 +108,8 @@ import {
     MatStepperModule,
     MatFormFieldModule,
   ],
-  // providers: [
-  //   {provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}}
-  // ],
+  providers: [
+  ],
   declarations: [
     // MatFormField,
   ]
