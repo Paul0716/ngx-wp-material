@@ -10,9 +10,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // service
 import { UserService } from './user.service';
+import { StorageService, StorageType } from '../core/storage/storage.service';
 
 // interfaces
 import { User } from '../interfaces/user.interface';
+
+// const
+import { storageKeys } from '../const/storage-keys';
 
 
 @Injectable()
@@ -31,7 +35,12 @@ export class AuthService {
     private store: Store<AuthState>,
     private http: HttpClient,
     private userSvc: UserService,
-  ) { }
+    private storageSvc: StorageService,
+  ) {
+    if ( this.userSvc.getUser() ) {
+      this.authenicated = true;
+    }
+  }
 
   /**
    * 判斷是否登入驗證通過
@@ -79,7 +88,7 @@ export class AuthService {
    * @memberof AuthService
    */
   login(loginData: AuthState) {
-    const endpoint = `${environment.url}wp/v2/users/me`;
+    const endpoint = `${environment.url}/wp/v2/users/me`;
     const headers  = this.getBasicAuthHeader(loginData);
     this.http
       .get(endpoint, {
@@ -89,6 +98,7 @@ export class AuthService {
 
         this.authenicated = true;
         this.userSvc.setUser(loginData);
+        this.storageSvc.store(storageKeys.user, loginData, StorageType.Session);
         loginData.authenicated = this.authenicated;
 
         this.store.dispatch(new AuthAction.Login(loginData));

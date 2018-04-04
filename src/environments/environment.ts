@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  url: 'http://wpdev.paultaku.tw/wp-json/',
+  url: 'http://wpdev.paultaku.tw/wp-json',
 };

@@ -22,6 +22,7 @@ export class AuthGuardService implements CanActivate  {
    */
   canActivate(): boolean {
     if (!this.authSvc.isAuthenticated()) {
+
       this.router.navigate(
         [
           appRoutePaths.login
