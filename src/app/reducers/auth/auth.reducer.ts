@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { AuthActionTypes } from './auth.actions';
+import { AuthActionTypes } from '../../actions/auth.actions';
 
 // interface
 import { User } from '../../interfaces/user.interface';
@@ -22,8 +22,19 @@ export interface AuthAction extends Action {
 
 export function reducer(state = initialState, action: AuthAction): State {
   switch (action.type) {
+
     case AuthActionTypes.LoginAction:
       return action.state;
+
+    case AuthActionTypes.LoginSuccessAction:
+      return action.state;
+
+    case AuthActionTypes.LoginFailedAction:
+      return <State>{
+        account: '',
+        password: '',
+      };
+
     default:
       return state;
   }

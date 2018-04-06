@@ -11,6 +11,7 @@ import { MAT_LABEL_GLOBAL_OPTIONS, ErrorStateMatcher, ShowOnDirtyErrorStateMatch
 
 // interface
 import { State } from '../../reducers/auth/auth.reducer';
+import * as AuthAction from '../../actions/auth.actions';
 
 // service
 import { AuthService } from '../../auth/auth.service';
@@ -93,9 +94,7 @@ export class LoginComponent implements OnInit, OnDestroy {
    * @memberof LoginComponent
    */
   authChange(user: State) {
-    if (user.authenicated) {
-      this.router.navigate([appRoutePaths.layout]);
-    }
+    console.log('authChange: ', user);
   }
 
 
@@ -119,7 +118,8 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   login() {
     const loginData = this.form.getRawValue();
-    this.authSvc.login(loginData);
+    // this.authSvc.login(loginData);
+    this.store.dispatch(new AuthAction.Login(loginData));
   }
 
 }

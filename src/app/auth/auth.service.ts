@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 // ngrx
 import { Store } from '@ngrx/store';
 import { State as AuthState } from '../reducers/auth/auth.reducer';
-import * as AuthAction from '../reducers/auth/auth.actions';
+import * as AuthAction from '../actions/auth.actions';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // service
@@ -17,6 +17,7 @@ import { User } from '../interfaces/user.interface';
 
 // const
 import { storageKeys } from '../const/storage-keys';
+import { Observable } from 'rxjs/Observable';
 
 
 @Injectable()
@@ -49,6 +50,15 @@ export class AuthService {
    */
   isAuthenticated() {
     return this.authenicated;
+  }
+
+  /**
+   * 設定是否通過驗證
+   *
+   * @memberof AuthService
+   */
+  setAuthenticated(pass: boolean): void {
+    this.authenicated = true;
   }
 
   /**
@@ -87,23 +97,13 @@ export class AuthService {
    * @param {*} loginData - 用戶登錄資料
    * @memberof AuthService
    */
-  login(loginData: AuthState) {
+  login(loginData: AuthState): Observable<any> {
     const endpoint = `${environment.url}/wp/v2/users/me`;
     const headers  = this.getBasicAuthHeader(loginData);
-    this.http
+    return this.http
       .get(endpoint, {
         headers: headers
-      })
-      .subscribe( res => {
-
-        this.authenicated = true;
-        this.userSvc.setUser(loginData);
-        this.storageSvc.store(storageKeys.user, loginData, StorageType.Session);
-        loginData.authenicated = this.authenicated;
-
-        this.store.dispatch(new AuthAction.Login(loginData));
       });
-
   }
 
 }
