@@ -85,7 +85,7 @@ export class StorageService {
         this.localStorage.clear(key);
         break;
 
-      case StorageType.Local:
+      case StorageType.Session:
         this.sessionStorage.clear(key);
         break;
 

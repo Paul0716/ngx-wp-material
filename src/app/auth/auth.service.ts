@@ -1,8 +1,12 @@
+
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 
-// ngrx
+// ngrx | rxjs
+import { Observable } from 'rxjs/Observable';
+import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
 import { State as AuthState } from '../reducers/auth/auth.reducer';
 import * as AuthAction from '../actions/auth.actions';
@@ -17,7 +21,7 @@ import { User } from '../interfaces/user.interface';
 
 // const
 import { storageKeys } from '../const/storage-keys';
-import { Observable } from 'rxjs/Observable';
+import { appRoutePaths } from '../app-routing-path.const';
 
 
 @Injectable()
@@ -37,6 +41,7 @@ export class AuthService {
     private http: HttpClient,
     private userSvc: UserService,
     private storageSvc: StorageService,
+    private router: Router,
   ) {
     if ( this.userSvc.getUser() ) {
       this.authenicated = true;
@@ -49,7 +54,9 @@ export class AuthService {
    * @memberof AuthService
    */
   isAuthenticated() {
-    return this.authenicated;
+    const user = this.userSvc.getUser();
+    console.log(user);
+    return user ? this.authenicated : false;
   }
 
   /**
@@ -58,7 +65,7 @@ export class AuthService {
    * @memberof AuthService
    */
   setAuthenticated(pass: boolean): void {
-    this.authenicated = true;
+    this.authenicated = pass;
   }
 
   /**
@@ -92,6 +99,18 @@ export class AuthService {
   }
 
   /**
+   * 清空狀態
+   *
+   * @returns {Observable<any>}
+   * @memberof AuthService
+   */
+  reset(): Observable<any> {
+    this.storageSvc.clean(StorageType.Session, storageKeys.user);
+    this.userSvc.setUser(null);
+    return of(null);
+  }
+
+  /**
    * 用戶登入功能
    *
    * @param {*} loginData - 用戶登錄資料
@@ -104,6 +123,27 @@ export class AuthService {
       .get(endpoint, {
         headers: headers
       });
+  }
+
+  /**
+   * 登出
+   *
+   * @memberof AuthService
+   */
+  logout(): void {
+
+    this.reset()
+      .subscribe( val => {
+
+        const isAuthed = this.isAuthenticated();
+        console.log(isAuthed);
+        if (!isAuthed) {
+          this.router.navigate([appRoutePaths.login]);
+        }
+      });
+
+
+
   }
 
 }

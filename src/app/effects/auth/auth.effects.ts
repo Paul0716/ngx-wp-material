@@ -53,8 +53,9 @@ export class AuthEffects {
           map( res => {
             const state = (<AuthAction>action).state;
             this.userSvc.setUser(state);
+            this.authSvc.setAuthenticated(true);
             this.storageSvc.store(storageKeys.user, state, StorageType.Session);
-            // this.router.navigate([appRoutePaths.layout]);
+            this.router.navigate([appRoutePaths.layout]);
             return { type: AuthActionTypes.LoginSuccessAction, state: (<AuthAction>action).state };
           }),
           // If request fails, dispatch failed action

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../auth/user.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -14,9 +16,20 @@ export class LayoutComponent implements OnInit {
    */
   public isOpen = false;
 
-  constructor() { }
+  constructor(
+    private authSvc: AuthService,
+  ) { }
 
   ngOnInit() {
+  }
+
+  /**
+   * 登出功能
+   *
+   * @memberof LayoutComponent
+   */
+  logout() {
+    this.authSvc.logout();
   }
 
 }
