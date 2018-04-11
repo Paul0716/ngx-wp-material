@@ -6,44 +6,34 @@ import { appRoutePaths } from './app-routing-path.const';
 
 // component
 import { LayoutComponent } from './core/layout/layout.component';
-import { environment } from '../environments/environment.prod';
-import { LoginComponent } from './pages/login/login.component';
+import { environment } from '../environments/environment';
 import { AuthGuardService } from './auth/auth-guard.service';
-import { AuthModule } from './auth/auth.module';
+import { LoginComponent } from './login/login.component';
+import { layoutRoutePaths } from './core/layout/layout-routing-path.const';
 
 
-const loginRout: Route = {
-  path: appRoutePaths.login,
+const loginRoute: Route = {
+  path: 'login',
   component: LoginComponent,
-};
-
-const layoutRout: Route = {
-    path: appRoutePaths.layout,
-    component: LayoutComponent,
-    canActivate: [
-      AuthGuardService
-    ],
 };
 
 // 沒有定義的Route，全部都會導回首頁處理
 const fallbackRoute: Route = {
   path: '**',
-  redirectTo: appRoutePaths.layout
+  redirectTo: appRoutePaths.layout + '/' + layoutRoutePaths.dashbroad,
+  pathMatch: 'full',
 };
 
 const routes: Routes = [
-  loginRout,
-  layoutRout,
-  fallbackRoute
+  loginRoute,
 ];
 
 @NgModule({
   imports: [
-    AuthModule,
     RouterModule.forRoot(routes, {
-      enableTracing: !environment.production,
+      enableTracing: true,
       useHash: true,
-      // preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules
     }
   )],
   exports: [

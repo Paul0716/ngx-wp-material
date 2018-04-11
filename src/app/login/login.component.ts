@@ -10,13 +10,13 @@ import { Observable } from 'rxjs/Observable';
 import { MAT_LABEL_GLOBAL_OPTIONS, ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 
 // interface
-import { State } from '../../reducers/auth/auth.reducer';
-import * as AuthAction from '../../actions/auth.actions';
+import { State } from '../reducers/auth/auth.reducer';
+import * as AuthAction from '../actions/auth.actions';
 
 // service
-import { AuthService } from '../../auth/auth.service';
-import { User } from '../../interfaces/user.interface';
-import { appRoutePaths } from '../../app-routing-path.const';
+import { AuthService } from '../auth/auth.service';
+import { User } from '../interfaces/user.interface';
+import { appRoutePaths } from '../app-routing-path.const';
 import { Subscription } from 'rxjs/Subscription';
 
 /**

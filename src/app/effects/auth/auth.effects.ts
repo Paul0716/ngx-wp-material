@@ -22,6 +22,7 @@ import { StorageService, StorageType } from '../../core/storage/storage.service'
 // const
 import { storageKeys } from '../../const/storage-keys';
 import { appRoutePaths } from '../../app-routing-path.const';
+import { layoutRoutePaths } from '../../core/layout/layout-routing-path.const';
 
 @Injectable()
 export class AuthEffects {
@@ -55,7 +56,7 @@ export class AuthEffects {
             this.userSvc.setUser(state);
             this.authSvc.setAuthenticated(true);
             this.storageSvc.store(storageKeys.user, state, StorageType.Session);
-            this.router.navigate([appRoutePaths.layout]);
+            this.router.navigate([layoutRoutePaths.dashbroad]);
             return { type: AuthActionTypes.LoginSuccessAction, state: (<AuthAction>action).state };
           }),
           // If request fails, dispatch failed action

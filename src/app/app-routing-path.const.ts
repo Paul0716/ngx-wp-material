@@ -5,6 +5,6 @@ export const appRoutePaths = {
   login: 'login',
 
   // 外層Layout
-  layout: 'dashbroad'
+  layout: ''
 
 };

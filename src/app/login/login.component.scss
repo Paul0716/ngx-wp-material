@@ -1,13 +1,17 @@
 // component main style
 
-@import "../../../assets/scss/input.scss";
-@import "../../../assets/scss/border.scss";
+@import "../../assets/scss/input.scss";
+@import "../../assets/scss/border.scss";
 
 
-$cardBg:rgba(189, 192, 186, .3);
+$cardBg: #fff;
 $cardBorder: #080808;
 $textColor: #fffffb;
 $holderColor: #fffffb;
+
+$formWidth: 280px;
+$logoWidth: 130px;
+
 
 .login-outter {
   box-sizing: border-box;
@@ -20,15 +24,24 @@ $holderColor: #fffffb;
 
 
   .login-form {
-    @include border($cardBorder, 20px);
+
     @include input-group($textColor, $holderColor, 100%);
 
-    width: 280px;
+    width: $formWidth;
     padding: 15px 10px;
     background-color: $cardBg;
+    box-shadow: 0 1px 3px rgba(0,0,0,.13);
 
     .btn-login {
       width: 100%;
+    }
+
+    img#logo {
+      width: $logoWidth;
+      height: $logoWidth;
+      align-self: center;
+      margin-left: ($formWidth - $logoWidth)/2;
+      padding-bottom: 50px;
     }
   }
 

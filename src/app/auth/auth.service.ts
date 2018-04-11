@@ -136,7 +136,6 @@ export class AuthService {
       .subscribe( val => {
 
         const isAuthed = this.isAuthenticated();
-        console.log(isAuthed);
         if (!isAuthed) {
           this.router.navigate([appRoutePaths.login]);
         }

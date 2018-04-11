@@ -28,8 +28,9 @@
       fixedTopGap="64">
       <!-- 連結列表 -->
       <mat-nav-list>
-        <a mat-list-item routerLink="/dashbroad">首頁</a>
-        <a mat-list-item (click)="logout()">登出</a>
+        <a mat-list-item [routerLink]="getRouterLink('dashbroad')">Dashbroad</a>
+        <a mat-list-item [routerLink]="getRouterLink('posts')">Posts</a>
+        <a mat-list-item (click)="logout()">Logout</a>
         <!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
         <!-- <a mat-list-item routerLink="/numberLucky">數字運勢</a>
         <a mat-list-item routerLink="/redux">redux</a> -->
@@ -43,7 +44,9 @@
 
     <!-- 網站內容 -->
     <mat-sidenav-content>
+
       <router-outlet></router-outlet>
+
     </mat-sidenav-content>
 
   </mat-sidenav-container>
