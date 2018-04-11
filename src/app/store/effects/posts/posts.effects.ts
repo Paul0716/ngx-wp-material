@@ -10,7 +10,7 @@ import { mergeMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 // Service
-import { PostsService } from '../../pages/posts/posts/posts.service';
+import { PostsService } from '../../../pages/posts/posts/posts.service';
 
 @Injectable()
 export class PostsEffects {

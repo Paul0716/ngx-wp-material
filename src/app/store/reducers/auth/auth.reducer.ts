@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { AuthActionTypes } from '../../actions/auth.actions';
 
 // interface
-import { User } from '../../interfaces/user.interface';
+import { User } from '../../../interfaces/user.interface';
 
 export interface State {
   account: string;

@@ -10,8 +10,8 @@ import { Observable } from 'rxjs/Observable';
 import { MAT_LABEL_GLOBAL_OPTIONS, ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
 
 // interface
-import { State } from '../reducers/auth/auth.reducer';
-import * as AuthAction from '../actions/auth.actions';
+import { State } from '../store/reducers/auth/auth.reducer';
+import * as AuthAction from '../store/actions/auth.actions';
 
 // service
 import { AuthService } from '../auth/auth.service';

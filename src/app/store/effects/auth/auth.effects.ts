@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 // services
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 
 // ngrx/effects
 import { ofType, Actions,  Effect} from '@ngrx/effects';
@@ -15,13 +15,13 @@ import { mergeMap, map, catchError } from 'rxjs/operators';
 // ngrx
 import { AuthAction } from '../../reducers/auth/auth.reducer';
 import { AuthActionTypes } from '../../actions/auth.actions';
-import { UserService } from '../../auth/user.service';
-import { StorageService, StorageType } from '../../core/storage/storage.service';
+import { UserService } from '../../../auth/user.service';
+import { StorageService, StorageType } from '../../../core/storage/storage.service';
 
 // const
-import { storageKeys } from '../../const/storage-keys';
-import { appRoutePaths } from '../../app-routing-path.const';
-import { layoutRoutePaths } from '../../core/layout/layout-routing-path.const';
+import { storageKeys } from '../../../const/storage-keys';
+import { appRoutePaths } from '../../../app-routing-path.const';
+import { layoutRoutePaths } from '../../../core/layout/layout-routing-path.const';
 
 @Injectable()
 export class AuthEffects {

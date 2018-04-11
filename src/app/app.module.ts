@@ -9,14 +9,14 @@ import { AppRoutingModule } from './app-routing-path.module';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from './core/material/material.module';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
+import { reducers, metaReducers } from './store/reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthModule } from './auth/auth.module';
-import { AuthEffects } from './effects/auth/auth.effects';
+import { AuthEffects } from './store/effects/auth/auth.effects';
 import { LoginModule } from './login/login.module';
-import { PostsEffects } from './effects/posts/posts.effects';
+import { PostsEffects } from './store/effects/posts/posts.effects';
 import { PostsModule } from './pages/posts/posts.module';
 
 

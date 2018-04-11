@@ -2,8 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 // ngrx
 import { Store, select } from '@ngrx/store';
-import { State as PostState, PostsAction } from '../../../reducers/posts/posts.reducer';
-import * as PostsActions from '../../../actions/posts.actions';
+import { State as PostState, PostsAction } from '../../../store/reducers/posts/posts.reducer';
+import * as PostsActions from '../../../store/actions/posts.actions';
 
 // ngx-material
 import { MatTableDataSource } from '@angular/material';
