@@ -8,8 +8,8 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { Store } from '@ngrx/store';
-import { State as AuthState } from '../reducers/auth/auth.reducer';
-import * as AuthAction from '../actions/auth.actions';
+import { State as AuthState } from '../store/reducers/auth/auth.reducer';
+import * as AuthAction from '../store/actions/auth.actions';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 // service

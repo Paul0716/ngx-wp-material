@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import { PostsActionTypes } from '../../actions/posts.actions';
 
 // interfaces
-import { Post } from '../../interfaces/post.interface';
+import { Post } from '../../../../../interfaces/post.interface';
 
 
 
@@ -22,8 +22,6 @@ export interface PostsAction extends Action {
 }
 
 export function reducer(state = initialState, action: PostsAction): State {
-
-  console.log('post reducers', action);
 
   switch (action.type) {
 

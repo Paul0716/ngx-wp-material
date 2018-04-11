@@ -16,7 +16,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthModule } from './auth/auth.module';
 import { AuthEffects } from './store/effects/auth/auth.effects';
 import { LoginModule } from './login/login.module';
-import { PostsEffects } from './store/effects/posts/posts.effects';
 import { PostsModule } from './pages/posts/posts.module';
 
 
@@ -34,7 +33,6 @@ import { PostsModule } from './pages/posts/posts.module';
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([
       AuthEffects,
-      PostsEffects,
     ]),
   ],
   providers: [
