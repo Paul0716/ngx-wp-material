@@ -55,7 +55,6 @@ export class AuthService {
    */
   isAuthenticated() {
     const user = this.userSvc.getUser();
-    console.log(user);
     return user ? this.authenicated : false;
   }
 

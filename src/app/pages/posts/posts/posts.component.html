@@ -1,0 +1,48 @@
+<mat-card>
+
+  <mat-card-title>
+    Posts
+  </mat-card-title>
+
+
+  <mat-card-content>
+
+
+    <mat-table [dataSource]="postList">
+
+      <!-- id -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.id }} </mat-cell>
+      </ng-container>
+
+      <!-- title -->
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <a mat-button href="{{ element.guid.rendered }}" target="_blank"> {{ element.title.rendered }} </a>
+        </mat-cell>
+      </ng-container>
+
+      <!-- status -->
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.status }} </mat-cell>
+      </ng-container>
+
+      <!-- author -->
+      <ng-container matColumnDef="author">
+        <mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.author }} </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+
+
+  </mat-card-content>
+
+</mat-card>

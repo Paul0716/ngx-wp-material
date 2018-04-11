@@ -7,7 +7,7 @@ import { appRoutePaths } from '../../app-routing-path.const';
 
 // component
 import { DashbroadComponent } from '../../pages/dashbroad/dashbroad.component';
-import { PostsComponent } from '../../pages/posts/posts.component';
+import { PostsComponent } from '../../pages/posts/posts/posts.component';
 import { LayoutComponent } from './layout.component';
 
 // service

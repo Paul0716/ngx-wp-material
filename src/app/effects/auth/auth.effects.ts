@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 // services
@@ -28,7 +27,6 @@ import { layoutRoutePaths } from '../../core/layout/layout-routing-path.const';
 export class AuthEffects {
 
   constructor(
-    private http: HttpClient,
     private authSvc: AuthService,
     private userSvc: UserService,
     private router: Router,
@@ -45,8 +43,12 @@ export class AuthEffects {
    */
   @Effect()
   login$: Observable<any> = this.actions$.pipe(
+    // 判斷為哪種動作
     ofType(AuthActionTypes.LoginAction),
+
+    // 實作登入邏輯
     mergeMap( action =>
+
       this.authSvc
         .login((<AuthAction>action).state)
         .pipe(
@@ -62,6 +64,7 @@ export class AuthEffects {
           // If request fails, dispatch failed action
           catchError(() => of({ type: AuthActionTypes.LoginFailedAction }))
         )
+
     )
   );
 

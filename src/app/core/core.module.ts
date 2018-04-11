@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { StorageModule } from './storage/storage.module';
 import { Ng2Webstorage } from 'ngx-webstorage';
+import { WpapiModule } from './wpapi/wpapi.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { Ng2Webstorage } from 'ngx-webstorage';
     LayoutModule,
     StorageModule,
     Ng2Webstorage,
+    WpapiModule,
   ]
 })
 export class CoreModule { }

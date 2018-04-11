@@ -7,10 +7,10 @@ import { postsRoutingPaths } from './posts-routing-path.const';
 
 
 // component
-import { PostsComponent } from '../../pages/posts/posts.component';
 
 // service
 import { AuthGuardService } from '../../auth/auth-guard.service';
+import { PostsComponent } from './posts/posts.component';
 
 
 const postsRoute: Route = {

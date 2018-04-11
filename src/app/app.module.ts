@@ -16,6 +16,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthModule } from './auth/auth.module';
 import { AuthEffects } from './effects/auth/auth.effects';
 import { LoginModule } from './login/login.module';
+import { PostsEffects } from './effects/posts/posts.effects';
+import { PostsModule } from './pages/posts/posts.module';
 
 
 @NgModule({
@@ -25,12 +27,14 @@ import { LoginModule } from './login/login.module';
     BrowserAnimationsModule,
     LoginModule,
     AuthModule,
+    PostsModule,
     AppRoutingModule,
     MaterialModule,
     StoreModule.forRoot(reducers, { metaReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     EffectsModule.forRoot([
-      AuthEffects
+      AuthEffects,
+      PostsEffects,
     ]),
   ],
   providers: [
