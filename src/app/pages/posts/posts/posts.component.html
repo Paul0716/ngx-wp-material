@@ -30,10 +30,16 @@
         <mat-cell *matCellDef="let element"> {{ element.status }} </mat-cell>
       </ng-container>
 
+      <!-- status -->
+      <ng-container matColumnDef="categories">
+        <mat-header-cell *matHeaderCellDef> Categories </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element.categories }} </mat-cell>
+      </ng-container>
+
       <!-- author -->
       <ng-container matColumnDef="author">
         <mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.author }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.author.name }} </mat-cell>
       </ng-container>
 
 

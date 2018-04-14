@@ -49,6 +49,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
     'id',
     'status',
     'title',
+    'categories',
     'author'
   ];
 
@@ -65,7 +66,14 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
       // 如果有回傳文章的話
       if (res && res.list) {
-        console.log(res.list);
+        const postList = res.list.map( post => {
+          const transPost = <any>post;
+
+          transPost.categories = post.categories.map(o => o.name).join(',');
+          transPost.author = post.author.name;
+
+          return post;
+        });
         this.postList = new MatTableDataSource<Post>(res.list);
       }
 

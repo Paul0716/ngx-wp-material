@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 // service
 import { UserService } from '../../auth/user.service';
 import { AuthService } from '../../auth/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class WpapiService {
@@ -21,20 +21,41 @@ export class WpapiService {
   ) { }
 
   /**
-   *
+   * wp get method api abstract
    *
    * @param {string} endpoint
+   * @param {*} [query]
+   * @returns {Observable<any>}
    * @memberof WpapiService
    */
-  get(endpoint: string): Observable<any> {
+  get(endpoint: string, query?: any): Observable<any> {
 
-    const ep = `${environment.url}${endpoint}`;
-    const user = this._userSvc.getUser();
-    const headers  = this._authSvc.getBasicAuthHeader(user);
+    const ep        = `${environment.url}${endpoint}`;
+    const user      = this._userSvc.getUser();
+    const headers   = this._authSvc.getBasicAuthHeader(user);
 
-    return this._http.get(ep, {
-      headers: headers
-    });
+    if (query) {
+
+      const params    = new HttpParams();
+      for (const key of Object.keys(query)) {
+        params.append( key, params[key] );
+      }
+
+      return this._http.get(ep, {
+        headers: headers,
+        params: params,
+      });
+
+    } else {
+
+      return this._http.get(ep, {
+        headers: headers,
+      });
+
+    }
+
+
+
   }
 
 }

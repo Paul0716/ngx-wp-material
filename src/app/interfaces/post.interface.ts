@@ -3,8 +3,8 @@ export interface  Post {
   status: string;
   title: string;
   content: string;
-  author: string;
+  author: any[];
   type: string;
   slug: string;
-  categories: number[];
+  categories: any[];
 }

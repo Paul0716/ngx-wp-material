@@ -17,6 +17,7 @@ import { AuthGuardService } from '../../auth/auth-guard.service';
 const layoutRoute: Route = {
   path: appRoutePaths.layout,
   component: LayoutComponent,
+  canActivate: [ AuthGuardService ],
   children: [
     {
       path: layoutRoutePaths.dashbroad,

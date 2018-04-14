@@ -16,6 +16,8 @@ import { WpapiModule } from './wpapi/wpapi.module';
     StorageModule,
     Ng2Webstorage,
     WpapiModule,
+  ],
+  declarations: [
   ]
 })
 export class CoreModule { }
