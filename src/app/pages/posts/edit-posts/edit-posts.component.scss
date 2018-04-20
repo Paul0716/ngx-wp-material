@@ -1,0 +1,52 @@
+$blockPadding: 8px 12px 8px 12px;
+@mixin block($padding) {
+  padding: $padding;
+  box-sizing: border-box;
+  float: left;
+}
+
+@mixin formField($width) {
+  mat-form-field {
+    width: $width;
+  }
+}
+
+@mixin radioGroup() {
+  .radio-group {
+    display: inline-flex;
+    flex-direction: column;
+
+    .radio-button {
+      margin: 5px;
+    }
+  }
+}
+
+.input-container {
+  width: 100%;
+  height: 100%;
+
+  > .main {
+    @include block($blockPadding);
+
+    width: 75%;
+
+    >* {
+      width: 100%;
+    }
+
+  }
+
+  > .side {
+    @include block($blockPadding);
+
+    @include formField(100%);
+
+    @include radioGroup();
+
+    width: 25%;
+  }
+
+
+
+}

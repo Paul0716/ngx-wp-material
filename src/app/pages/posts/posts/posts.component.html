@@ -1,3 +1,14 @@
+<div class="button-row">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [routerLink]="['./','new']">
+    <mat-icon>add circle</mat-icon> New Post
+  </button>
+</div>
+
+
 <mat-card>
 
   <mat-card-title>
@@ -39,7 +50,7 @@
       <!-- author -->
       <ng-container matColumnDef="author">
         <mat-header-cell *matHeaderCellDef> Author </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.author.name }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{ element.author }} </mat-cell>
       </ng-container>
 
 

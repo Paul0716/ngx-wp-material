@@ -16,7 +16,7 @@ const postsRoute: Route = {
   path: dashbroadRoutingPaths.root,
   children: [
     {
-      path: '',
+      path: dashbroadRoutingPaths.root,
       component: DashbroadComponent,
     }
   ]

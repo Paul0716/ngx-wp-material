@@ -7,19 +7,28 @@ import { postsRoutingPaths } from './posts-routing-path.const';
 
 
 // component
+import { PostsComponent } from './posts/posts.component';
+import { EditPostsComponent } from './edit-posts/edit-posts.component';
 
 // service
 import { AuthGuardService } from '../../auth/auth-guard.service';
-import { PostsComponent } from './posts/posts.component';
 
 
 const postsRoute: Route = {
   path: postsRoutingPaths.root,
   children: [
     {
-      path: '',
+      path: postsRoutingPaths.root,
       component: PostsComponent,
     },
+    {
+      path: postsRoutingPaths.new,
+      component: EditPostsComponent,
+    },
+    {
+      path: postsRoutingPaths.edit,
+      component: EditPostsComponent,
+    }
   ]
 };
 

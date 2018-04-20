@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { WpapiService } from './wpapi.service';
 import { WpuserService } from './wpuser.service';
 import { WpcategoriesService } from './wpcategories.service';
+import { WppostsService } from './wpposts.service';
 
 @NgModule({
   imports: [
@@ -12,6 +13,7 @@ import { WpcategoriesService } from './wpcategories.service';
     WpapiService,
     WpuserService,
     WpcategoriesService,
+    WppostsService,
   ],
   declarations: []
 })

@@ -13,6 +13,7 @@ import { of } from 'rxjs/observable/of';
 import { PostsService } from '../../../posts/posts.service';
 import { WpuserService } from '../../../../../core/wpapi/wpuser.service';
 import { WpcategoriesService } from '../../../../../core/wpapi/wpcategories.service';
+import { WppostsService } from '../../../../../core/wpapi/wpposts.service';
 
 @Injectable()
 export class PostsEffects {
@@ -22,6 +23,7 @@ export class PostsEffects {
     private _postSvc: PostsService,
     private _wpuser: WpuserService,
     private _wpcate: WpcategoriesService,
+    private _wpposts: WppostsService,
   ) {}
 
 
@@ -35,13 +37,27 @@ export class PostsEffects {
 
       return this._postSvc.list().pipe(
 
-        // author id 替換成名字
+        // author id 替換成 Wpuser
         concatMap(this.postsReplaceUser.bind(this)),
 
-        // categories id 踢換成名字
+        // categories id 踢換成 wpcategories
         concatMap(this.postReplaceCategories.bind(this)),
 
+        // author 和 categories 換成字串
+        map( (posts: any[]) => {
+          return posts.map(post => {
+            const transPost = <any>post;
+
+            transPost.categories = post.categories.map(o => o.name).join(',');
+            transPost.author = post.author.name;
+
+            return post;
+          });
+        }),
+
+        //
         map(posts => ({ type: PostsActionTypes.ListSuccessAction, list: posts })),
+
         // http resposne 錯誤處理
         catchError( () => of({ type: PostsActionTypes.ListFailedAction }) )
       );
@@ -49,13 +65,35 @@ export class PostsEffects {
     }),
   );
 
+  @Effect()
+  create$: Observable<any> = this.actions$.pipe(
+    // 判斷為何種動作類型
+    ofType(PostsActionTypes.CreatePostAction),
+
+
+    // 主要動作
+    mergeMap( (action: any) => {
+
+
+      return this._wpposts.editPost(action.payload)
+        .pipe(
+          // 新增文章成功處理
+          map( post => ({ type: PostsActionTypes.CreatePostSuccessAction, post: post }) ),
+
+          // http response error handler
+          catchError( () => of({ type: PostsActionTypes.CreatePostFailedAction }) ),
+        );
+    }),
+    //
+  );
+
   /**
-   *
-   *
-   * @param {any} posts
-   * @returns {Observable<any>}
-   * @memberof PostsEffects
-   */
+ *
+ *
+ * @param {any} posts
+ * @returns {Observable<any>}
+ * @memberof PostsEffects
+ */
   postReplaceCategories(posts): Observable<any> {
 
     const categories = Array.from(
@@ -68,10 +106,11 @@ export class PostsEffects {
       .getCategoryList({
         include: categories
       }).pipe(
-        map( (cates: any[]) => {
+        map((cates: any[]) => {
 
-          posts = posts.map( post => {
-            post.categories = post.categories.map( cate => {
+
+          posts = posts.map(post => {
+            post.categories = post.categories.map(cate => {
               return cates.filter(o => o.id === cate)[0];
             });
             return post;
@@ -79,7 +118,9 @@ export class PostsEffects {
 
           return posts;
         }),
-      );
+    );
+
+
   }
 
   /**
@@ -102,17 +143,16 @@ export class PostsEffects {
       .getUserList({
         include: authors
       }).pipe(
-        map( ( users: any[] ) => {
-
-          posts = posts.map( post => {
-            const postUser = users.filter( user => user.id === post.author )[0];
+        map((users: any[]) => {
+          posts = posts.map(post => {
+            const postUser = users.filter(user => user.id === post.author)[0];
             post.author = postUser;
             return post;
           });
 
-          return  posts;
+          return posts;
         })
       );
-  }
 
+  }
 }

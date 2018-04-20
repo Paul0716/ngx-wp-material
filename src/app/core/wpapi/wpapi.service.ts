@@ -53,9 +53,43 @@ export class WpapiService {
       });
 
     }
+  }
 
+  /**
+   * wp post method api abstract
+   *
+   * @param {string} endpoint
+   * @param {*} postData
+   * @param {*} [query]
+   * @returns {Observable<any>}
+   * @memberof WpapiService
+   */
+  post(endpoint: string, postData: any, query?: any): Observable<any> {
 
+    const ep = `${environment.url}${endpoint}`;
 
+    const user = this._userSvc.getUser();
+    const headers = this._authSvc.getBasicAuthHeader(user);
+
+    if (query) {
+
+      const params = new HttpParams();
+      for (const key of Object.keys(query)) {
+        params.append(key, params[key]);
+      }
+
+      return this._http.post(ep, postData, {
+        headers: headers,
+        params: params,
+      });
+
+    } else {
+
+      return this._http.post(ep, postData, {
+        headers: headers,
+      });
+
+    }
   }
 
 }

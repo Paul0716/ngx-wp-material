@@ -13,7 +13,13 @@ import { Post } from '../../../interfaces/post.interface';
 
 // service
 import { PostsService } from './posts.service';
+import { WpuserService } from '../../../core/wpapi/wpuser.service';
+import { WpcategoriesService } from '../../../core/wpapi/wpcategories.service';
+
+// Observable
 import { Observable } from 'rxjs/Observable';
+import { concatMap, map, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-posts',
@@ -56,24 +62,25 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   constructor(
     private _store: Store<PostState>,
+    private _wpuser: WpuserService,
+    private _wpcate: WpcategoriesService,
     private _postsSvc: PostsService,
   ) { }
 
   ngOnInit() {
     this._store.pipe(
-      select('posts')
+
+      select('posts'),
+
+      // map( (res: any) => res.list ),
+
     ).subscribe( (res: PostsAction) => {
+
+      console.log(res.list);
 
       // 如果有回傳文章的話
       if (res && res.list) {
-        const postList = res.list.map( post => {
-          const transPost = <any>post;
 
-          transPost.categories = post.categories.map(o => o.name).join(',');
-          transPost.author = post.author.name;
-
-          return post;
-        });
         this.postList = new MatTableDataSource<Post>(res.list);
       }
 

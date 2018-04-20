@@ -5,3 +5,16 @@ $bgColor: #f1f1f1;
 body {
   background-color: $bgColor;
 }
+
+.button-row{
+  padding-bottom: 8px;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.ck-content {
+  min-height: 480px;
+}
+

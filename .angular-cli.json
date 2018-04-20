@@ -22,7 +22,9 @@
         "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
         "styles.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
