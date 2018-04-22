@@ -4,6 +4,7 @@ import { WpapiService } from './wpapi.service';
 import { WpuserService } from './wpuser.service';
 import { WpcategoriesService } from './wpcategories.service';
 import { WppostsService } from './wpposts.service';
+import { WptagService } from './wptag.service';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { WppostsService } from './wpposts.service';
     WpuserService,
     WpcategoriesService,
     WppostsService,
+    WptagService,
   ],
   declarations: []
 })

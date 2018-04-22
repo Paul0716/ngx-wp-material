@@ -7,6 +7,7 @@ import { LayoutModule } from './layout/layout.module';
 import { StorageModule } from './storage/storage.module';
 import { Ng2Webstorage } from 'ngx-webstorage';
 import { WpapiModule } from './wpapi/wpapi.module';
+import { DialogsModule } from './dialogs/dialogs.module';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { WpapiModule } from './wpapi/wpapi.module';
     StorageModule,
     Ng2Webstorage,
     WpapiModule,
+    DialogsModule,
   ],
   declarations: [
   ]

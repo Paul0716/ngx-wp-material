@@ -4,9 +4,18 @@ import { Injectable } from '@angular/core';
 import { ofType, Actions, Effect } from '@ngrx/effects';
 import { PostsActionTypes } from '../../actions/posts.actions';
 
+// interface
+import { WPpost } from '../../../../../interfaces/wp/post.interface';
+
 // rxjs
 import { Observable } from 'rxjs/Observable';
-import { mergeMap, map, catchError, concat, concatMapTo, concatMap } from 'rxjs/operators';
+import {
+  mergeMap,
+  map,
+  catchError,
+  concat,
+  concatMapTo,
+  concatMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 // Service
@@ -87,14 +96,14 @@ export class PostsEffects {
     //
   );
 
-  /**
+/**
  *
  *
- * @param {any} posts
+ * @param {WPpost[]} posts
  * @returns {Observable<any>}
  * @memberof PostsEffects
  */
-  postReplaceCategories(posts): Observable<any> {
+postReplaceCategories(posts: WPpost[] ): Observable<any> {
 
     const categories = Array.from(
       new Set([
@@ -123,36 +132,36 @@ export class PostsEffects {
 
   }
 
-  /**
-   *
-   *
-   * @param {any} posts
-   * @returns {Observable<any>}
-   * @memberof PostsEffects
-   */
-  postsReplaceUser(posts): Observable<any> {
+/**
+ *
+ *
+ * @param {any} posts
+ * @returns {Observable<any>}
+ * @memberof PostsEffects
+ */
+postsReplaceUser(posts): Observable<any> {
 
-    const authors = Array.from(
-      new Set([
-        ...posts.map(o => o.author)
-      ])
-    ).join(',');
+  const authors = Array.from(
+    new Set([
+      ...posts.map(o => o.author)
+    ])
+  ).join(',');
 
 
-    return this._wpuser
-      .getUserList({
-        include: authors
-      }).pipe(
-        map((users: any[]) => {
-          posts = posts.map(post => {
-            const postUser = users.filter(user => user.id === post.author)[0];
-            post.author = postUser;
-            return post;
-          });
+  return this._wpuser
+    .getUserList({
+      include: authors
+    }).pipe(
+      map((users: any[]) => {
+        posts = posts.map(post => {
+          const postUser = users.filter(user => user.id === post.author)[0];
+          post.author = postUser;
+          return post;
+        });
 
-          return posts;
-        })
-      );
+        return posts;
+      })
+    );
 
   }
 }

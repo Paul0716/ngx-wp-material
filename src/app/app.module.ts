@@ -11,12 +11,16 @@ import { MaterialModule } from './core/material/material.module';
 import { StoreModule } from '@ngrx/store';
 import { reducers, metaReducers } from './store/reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthModule } from './auth/auth.module';
 import { AuthEffects } from './store/effects/auth/auth.effects';
 import { LoginModule } from './login/login.module';
 import { PostsModule } from './pages/posts/posts.module';
+
+// interceptor
+import { WpInterceptor } from './interceptors/wp.interceptor';
 
 
 @NgModule({
@@ -36,7 +40,11 @@ import { PostsModule } from './pages/posts/posts.module';
     ]),
   ],
   providers: [
-
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: WpInterceptor,
+      multi: true
+    }
   ],
   declarations: [
     AppComponent,

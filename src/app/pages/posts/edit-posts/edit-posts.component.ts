@@ -1,10 +1,15 @@
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+// ngx-material
+import { MatDialog } from '@angular/material';
 
 // store
 import { Store, select } from '@ngrx/store';
 import * as PostsActions from '../store/actions/posts.actions';
+import * as TagsActions from '../store/actions/tags.actions';
 
 // rxjs
 import { Observable } from 'rxjs/Observable';
@@ -13,11 +18,14 @@ import { Subscription } from 'rxjs/Subscription';
 
 // service
 import { WppostsService } from '../../../core/wpapi/wpposts.service';
+import { WptagService } from '../../../core/wpapi/wptag.service';
+
 
 // interface
 import { Option } from '../../../interfaces/option.interface';
 import { State as PostState } from '../store/reducers/posts/posts.reducer';
-import { Router } from '@angular/router';
+import { PostStatus } from '../../../enum/wp/post-status.enum';
+import { PostFormat } from '../../../enum/wp/post-format.enum';
 
 // ckeditor
 declare var ClassicEditor;
@@ -55,6 +63,13 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   private _newPostContent: Subscription;
 
   /**
+   * 標籤選項列表
+   *
+   * @memberof EditPostsComponent
+   */
+  public tags = [];
+
+  /**
    *
    *
    * @type {Option[]}
@@ -63,23 +78,23 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   statusOpt: Option[] = [
     {
       label: 'Draft',
-      value: 'draft',
+      value: PostStatus.draft,
     },
     {
       label: 'Publish',
-      value: 'publish',
+      value: PostStatus.publish,
     },
     {
       label: 'Future',
-      value: 'future',
+      value: PostStatus.future,
     },
     {
       label: 'Pending',
-      value: 'pending',
+      value: PostStatus.pending,
     },
     {
       label: 'Private',
-      value: 'private',
+      value: PostStatus.private,
     }
   ];
 
@@ -92,43 +107,43 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   formatOpt: Option[] = [
     {
       label: 'Standard',
-      value: 'standard',
+      value: PostFormat.standard,
     },
     {
       label: 'Aside',
-      value: 'aside',
+      value: PostFormat.aside,
     },
     {
       label: 'Chat',
-      value: 'chat',
+      value: PostFormat.chat,
     },
     {
       label: 'Gallery',
-      value: 'gallery',
+      value: PostFormat.gallery,
     },
     {
       label: 'Link',
-      value: 'link',
+      value: PostFormat.link,
     },
     {
       label: 'Image',
-      value: 'image',
+      value: PostFormat.image,
     },
     {
       label: 'Quote',
-      value: 'quote',
+      value: PostFormat.quote,
     },
     {
       label: 'Status',
-      value: 'status',
+      value: PostFormat.status,
     },
     {
       label: 'Video',
-      value: 'video',
+      value: PostFormat.video,
     },
     {
       label: 'Audio',
-      value: 'audio'
+      value: PostFormat.audio,
     }
   ];
 
@@ -136,8 +151,10 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   constructor(
     private _fb: FormBuilder,
     private _wpposts: WppostsService,
+    private _wptag: WptagService,
     private _router: Router,
     private _store: Store<PostState>,
+    private _dialog: MatDialog,
   ) { }
 
 
@@ -158,13 +175,22 @@ export class EditPostsComponent implements OnInit, OnDestroy {
         select('posts')
       )
       .subscribe( (res: any) => {
-        console.log(res);
-
         if (res.post) {
           this._router.navigate(['../']);
         }
 
       });
+
+
+    this._store
+      .pipe(
+        select('tags')
+      )
+      .subscribe( (res: any) => {
+        this.tags = res.tags;
+      });
+
+    this._store.dispatch(new TagsActions.List());
   }
 
   /**
@@ -192,8 +218,9 @@ export class EditPostsComponent implements OnInit, OnDestroy {
     this.editPostForm = this._fb.group({
       title: [ '', [ Validators.required ] ],
       content: [ '', [ Validators.required ] ],
-      status: [ 'draft', [] ],
-      format: [ 'standard', [] ],
+      status: [ PostStatus.draft, [] ],
+      format: [ PostFormat.standard, [] ],
+      tags: [ [], [] ],
     });
   }
 
@@ -242,9 +269,10 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   postPublish(ev) {
     if (this.editPostForm.valid) {
 
-      const newPost = this.editPostForm.getRawValue();
+      const post = this.editPostForm.getRawValue();
+      post.tags = post.tags.map(o => o = o.id);
 
-      this._store.dispatch(new PostsActions.Create(newPost));
+      this._store.dispatch(new PostsActions.Create(post));
 
 
     } else {
@@ -252,5 +280,63 @@ export class EditPostsComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  /**
+   * 取得目前表單的tag清單
+   *
+   * @readonly
+   * @memberof EditPostsComponent
+   */
+  get tagsList() {
+    return this.editPostForm.get('tags').value;
+  }
+
+  /**
+   * 新增tag 到 reactive form
+   *
+   * @memberof EditPostsComponent
+   */
+  addTag(inputEl: HTMLInputElement) {
+    const value = inputEl.value;
+    const ctrl = this.editPostForm.get('tags');
+    const ctrlVal = ctrl.value;
+
+    this._wptag.createTag({
+      name: value
+    }).subscribe( (response) => {
+
+      if (ctrlVal.indexOf(value) === -1) {
+        ctrlVal.push({
+          ...response
+        });
+        ctrl.setValue(ctrlVal);
+        inputEl.value = '';
+      }
+
+    });
+  }
+
+  /**
+   * 新增標籤到 post 的 formgroup
+   *
+   * @param {any} ev
+   * @param {any} tag
+   * @memberof EditPostsComponent
+   */
+  addTagToCtrl(ev, tag) {
+
+    const value = tag.name;
+    const ctrl = this.editPostForm.get('tags');
+    const ctrlVal = ctrl.value;
+
+    if (!ctrlVal.filter( o => o.name == value ).length) {
+      ctrlVal.push({
+        ...tag
+      });
+      ctrl.setValue(ctrlVal);
+    }
+
+  }
+
 
 }

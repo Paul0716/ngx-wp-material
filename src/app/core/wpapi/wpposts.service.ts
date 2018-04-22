@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
+
+// service
 import { WpapiService } from './wpapi.service';
+
+// rxjs
 import { Observable } from 'rxjs/Observable';
+
+// interface
+import { WPpost } from '../../interfaces/wp/post.interface';
 
 @Injectable()
 export class WppostsService {
@@ -17,7 +24,7 @@ export class WppostsService {
    * @returns {Observable<any>}
    * @memberof WppostsService
    */
-  editPost(postData, postId?): Observable<any> {
+  editPost(postData: WPpost, postId?): Observable<any> {
     const endpoint = postId ? `/wp/v2/posts/${postId}` : '/wp/v2/posts';
     return this._wpapi.post(endpoint, postData);
   }
