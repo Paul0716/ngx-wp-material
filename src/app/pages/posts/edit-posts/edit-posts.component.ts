@@ -282,13 +282,23 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 取得目前表單的tag清單
+   * 取得目前 post status的顯示標籤
    *
    * @readonly
    * @memberof EditPostsComponent
    */
-  get tagsList() {
-    return this.editPostForm.get('tags').value;
+  get currentStatusLabel() {
+    return this.statusOpt.filter( o => o.value === this.rawPostValue.status )[0].label;
+  }
+
+  /**
+   * 取得目前 post format的顯示標籤
+   *
+   * @readonly
+   * @memberof EditPostsComponent
+   */
+  get currentFormatLabel() {
+    return this.formatOpt.filter(o => o.value === this.rawPostValue.format)[0].label;
   }
 
   /**

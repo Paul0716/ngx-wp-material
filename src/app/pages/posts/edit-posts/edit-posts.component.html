@@ -33,7 +33,7 @@
               <b>Post Status</b>
             </mat-panel-title>
             <mat-panel-description>
-              {{ rawPostValue.status }}
+              {{ currentStatusLabel }}
             </mat-panel-description>
           </mat-expansion-panel-header>
 
@@ -58,7 +58,7 @@
               <b>Post Format</b>
             </mat-panel-title>
             <mat-panel-description>
-              {{ rawPostValue.format }}
+               {{ currentFormatLabel }}
             </mat-panel-description>
           </mat-expansion-panel-header>
 
@@ -124,11 +124,11 @@
 
             </mat-tab-group>
 
-            <mat-accordion *ngIf="tagsList.length > 0">
+            <mat-accordion *ngIf="rawPostValue.tags.length > 0">
               <h3>Current tags</h3>
               <mat-form-field>
                 <mat-chip-list #chipList>
-                  <mat-chip *ngFor="let tag of tagsList">{{ tag.name }}
+                  <mat-chip *ngFor="let tag of rawPostValue.tags">{{ tag.name }}
                     <mat-icon matChipRemove (click)="removeTag($event, tag)">cancel</mat-icon>
                   </mat-chip>
                 </mat-chip-list>
