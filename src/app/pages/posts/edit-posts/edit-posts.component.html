@@ -37,15 +37,18 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <mat-radio-group class="radio-group" formControlName="status">
+          <ng-template matExpansionPanelContent>
+            <mat-radio-group class="radio-group" formControlName="status">
 
-            <mat-radio-button
-              *ngFor="let opt of statusOpt"
-              class="radio-button"
-              [value]="opt.value">{{ opt.label }}
-            </mat-radio-button>
+              <mat-radio-button
+                *ngFor="let opt of statusOpt"
+                class="radio-button"
+                [value]="opt.value">{{ opt.label }}
+              </mat-radio-button>
 
-          </mat-radio-group>
+            </mat-radio-group>
+          </ng-template>
+
 
         </mat-expansion-panel>
         <!-- ./post status radio group -->
@@ -62,33 +65,36 @@
             </mat-panel-description>
           </mat-expansion-panel-header>
 
-          <mat-radio-group
-            class="radio-group"
-            formControlName="format">
+          <ng-template matExpansionPanelContent>
+            <mat-radio-group
+              class="radio-group"
+              formControlName="format">
 
-            <mat-radio-button
-              *ngFor="let opt of formatOpt"
-              class="radio-button"
-              [value]="opt.value">
-              {{ opt.label }}
-            </mat-radio-button>
+              <mat-radio-button
+                *ngFor="let opt of formatOpt"
+                class="radio-button"
+                [value]="opt.value">
+                {{ opt.label }}
+              </mat-radio-button>
 
-          </mat-radio-group>
+            </mat-radio-group>
+          </ng-template>
+
+
 
         </mat-expansion-panel>
         <!-- ./post status option list -->
 
         <mat-divider></mat-divider>
 
-        <mat-card>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Post Tags</b>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-          <mat-card-header>
-            <mat-card-title>
-              <h3>Post Tags</h3>
-            </mat-card-title>
-          </mat-card-header>
-
-          <mat-card-content>
+          <ng-template matExpansionPanelContent>
             <mat-tab-group>
               <mat-tab label="Add Tags">
                 <div class="container tabs">
@@ -106,7 +112,6 @@
                     </div>
                   </div>
                   <div class="clearfix"></div>
-                  <!-- ./post tag add -->
 
                 </div>
               </mat-tab>
@@ -135,10 +140,12 @@
                 <input [matChipInputFor]="chipList">
               </mat-form-field>
             </mat-accordion>
+          </ng-template>
 
 
-          </mat-card-content>
-        </mat-card>
+        </mat-expansion-panel>
+        <!-- ./post tags -->
+
 
         <mat-divider></mat-divider>
 

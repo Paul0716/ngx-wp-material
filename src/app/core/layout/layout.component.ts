@@ -7,6 +7,7 @@ import { AuthService } from '../../auth/auth.service';
 // const
 import { layoutRoutePaths } from './layout-routing-path.const';
 import { appRoutePaths } from '../../app-routing-path.const';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
@@ -30,10 +31,17 @@ export class LayoutComponent implements OnInit {
   private layoutRoutePath = layoutRoutePaths.dashbroad;
 
   constructor(
-    private authSvc: AuthService,
+    private _authSvc: AuthService,
+    private _router: Router,
   ) { }
 
   ngOnInit() {
+
+    this._router.events.subscribe((val) => {
+      if (val instanceof NavigationEnd) {
+        this.isOpen = false;
+      }
+    });
   }
 
   /**
@@ -53,7 +61,7 @@ export class LayoutComponent implements OnInit {
    * @memberof LayoutComponent
    */
   logout() {
-    this.authSvc.logout();
+    this._authSvc.logout();
   }
 
 }

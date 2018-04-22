@@ -28,6 +28,8 @@ import { of } from 'rxjs/observable/of';
 })
 export class PostsComponent implements OnInit, AfterViewInit {
 
+  public loading = true;
+
   /**
    * store posts list
    *
@@ -75,8 +77,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
       // map( (res: any) => res.list ),
 
     ).subscribe( (res: PostsAction) => {
-
-      console.log(res.list);
 
       // 如果有回傳文章的話
       if (res && res.list) {
