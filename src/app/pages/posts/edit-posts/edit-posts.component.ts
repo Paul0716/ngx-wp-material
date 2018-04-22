@@ -292,6 +292,16 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * 取得表單目前的值
+   *
+   * @readonly
+   * @memberof EditPostsComponent
+   */
+  get rawPostValue() {
+    return this.editPostForm.getRawValue();
+  }
+
+  /**
    * 新增tag 到 reactive form
    *
    * @memberof EditPostsComponent
@@ -319,11 +329,11 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   /**
    * 新增標籤到 post 的 formgroup
    *
-   * @param {any} ev
+   * @param {MouseEvent} ev
    * @param {any} tag
    * @memberof EditPostsComponent
    */
-  addTagToCtrl(ev, tag) {
+  addTagToCtrl(ev: MouseEvent, tag: any) {
 
     const value = tag.name;
     const ctrl = this.editPostForm.get('tags');
@@ -334,6 +344,26 @@ export class EditPostsComponent implements OnInit, OnDestroy {
         ...tag
       });
       ctrl.setValue(ctrlVal);
+    }
+  }
+
+  /**
+   * 移除標籤
+   *
+   * @param {MouseEvent} ev
+   * @param {any} tag
+   * @memberof EditPostsComponent
+   */
+  removeTag(ev: MouseEvent, tag: any) {
+
+    const tagId = tag.id;
+    const ctrl = this.editPostForm.get('tags');
+    const ctrlVal = ctrl.value;
+
+    const targetTag = ctrlVal.filter(o => o.id === tagId)[0];
+    if (targetTag) {
+      const index = ctrlVal.indexOf(targetTag);
+      ctrlVal.splice(index, 1);
     }
 
   }

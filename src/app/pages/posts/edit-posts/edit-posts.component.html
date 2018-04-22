@@ -1,121 +1,161 @@
-<pre>
-  {{ editPostForm.value | json }}
-</pre>
+<mat-accordion>
 
-<mat-card>
+  <form [formGroup]="editPostForm">
 
-  <mat-card-title>
-    New Posts
-  </mat-card-title>
+    <div class="input-container">
 
-  <mat-card-content>
-    <form [formGroup]="editPostForm">
+      <mat-card class="main">
+        <mat-card-header>
+          <mat-card-title>
+            <h2>New Posts</h2>
+          </mat-card-title>
+        </mat-card-header>
 
-      <div class="input-container">
-
-        <div class="main">
-
+        <mat-card-content>
 
           <mat-form-field>
             <input matInput placeholder="Title" formControlName="title" />
           </mat-form-field>
           <!--./post title -->
 
-          <textarea
-            matInput
-            name="content"
-            cols="30"
-            rows="30"
-            id="ckeditor"></textarea>
+          <textarea matInput name="content" cols="30" rows="30" id="ckeditor"></textarea>
           <!--./post content -->
-        </div>
 
-        <div class="side">
+        </mat-card-content>
 
+      </mat-card>
 
-          <h4>Post Status</h4>
-          <mat-radio-group
-            class="radio-group"
-            formControlName="status">
+      <mat-accordion class="side">
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Post Status</b>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ rawPostValue.status }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-radio-group class="radio-group" formControlName="status">
+
             <mat-radio-button
               *ngFor="let opt of statusOpt"
               class="radio-button"
-              [value]="opt.value">{{ opt.label }}</mat-radio-button>
-          </mat-radio-group>
-          <div class="clearfix"></div>
-          <!-- ./post status radio group -->
+              [value]="opt.value">{{ opt.label }}
+            </mat-radio-button>
 
-          <h4>Post Format</h4>
-          <mat-radio-group class="radio-group" formControlName="format">
+          </mat-radio-group>
+
+        </mat-expansion-panel>
+        <!-- ./post status radio group -->
+
+        <mat-divider></mat-divider>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <b>Post Format</b>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ rawPostValue.format }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <mat-radio-group
+            class="radio-group"
+            formControlName="format">
+
             <mat-radio-button
               *ngFor="let opt of formatOpt"
               class="radio-button"
-              [value]="opt.value">{{ opt.label }}</mat-radio-button>
+              [value]="opt.value">
+              {{ opt.label }}
+            </mat-radio-button>
+
           </mat-radio-group>
-          <div class="clearfix"></div>
-          <!-- ./post status option list -->
 
-          <mat-tab-group>
-            <mat-tab label="Add Tags">
-              <div class="container tabs">
+        </mat-expansion-panel>
+        <!-- ./post status option list -->
 
-                <div class="post-tags">
-                  <div class="input">
-                    <mat-form-field class="input">
-                      <input matInput placeholder="Post Tags" #tagInput>
-                    </mat-form-field>
+        <mat-divider></mat-divider>
+
+        <mat-card>
+
+          <mat-card-header>
+            <mat-card-title>
+              <h3>Post Tags</h3>
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <mat-tab-group>
+              <mat-tab label="Add Tags">
+                <div class="container tabs">
+
+                  <div class="post-tags">
+                    <div class="input">
+                      <mat-form-field class="input">
+                        <input matInput placeholder="Post Tags" #tagInput>
+                      </mat-form-field>
+                    </div>
+                    <div class="fab-btn">
+                      <button mat-mini-fab (click)="addTag(tagInput)" color="primary" type="button">
+                        <mat-icon>add circle</mat-icon>
+                      </button>
+                    </div>
                   </div>
-                  <div class="fab-btn">
-                    <button mat-mini-fab (click)="addTag(tagInput)" color="primary" type="button">
-                      <mat-icon>add circle</mat-icon>
-                    </button>
-                  </div>
+                  <div class="clearfix"></div>
+                  <!-- ./post tag add -->
+
                 </div>
-                <div class="clearfix"></div>
-                <!-- ./post tag add -->
+              </mat-tab>
 
-              </div>
-            </mat-tab>
+              <mat-tab label="Most used tags">
 
-            <mat-tab label="Most used tags">
+                <div class="container tabs">
+                  <mat-chip-list class="mat-chip-list-stacked">
+                    <mat-chip *ngFor="let tag of tags" (click)="addTagToCtrl($event, tag)">
+                      {{ tag.name }}
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </mat-tab>
 
-              <div class="container tabs">
-                <mat-chip-list class="mat-chip-list-stacked">
-                  <mat-chip
-                    *ngFor="let tag of tags"
-                    (click)="addTagToCtrl($event, tag)">
-                    {{ tag.name }}
+            </mat-tab-group>
+
+            <mat-accordion *ngIf="tagsList.length > 0">
+              <h3>Current tags</h3>
+              <mat-form-field>
+                <mat-chip-list #chipList>
+                  <mat-chip *ngFor="let tag of tagsList">{{ tag.name }}
+                    <mat-icon matChipRemove (click)="removeTag($event, tag)">cancel</mat-icon>
                   </mat-chip>
                 </mat-chip-list>
-              </div>
-            </mat-tab>
-
-          </mat-tab-group>
-
-          <h3 *ngIf="tagsList.length > 0">Current tags</h3>
-          <mat-list>
-            <mat-list-item *ngFor="let tag of tagsList">
-              {{ tag.name }}
-            </mat-list-item>
-          </mat-list>
-
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            (click)="postPublish($event)">
-            Publish
-          </button>
-          <div class="clearfix"></div>
-          <!-- ./button publish -->
-
-        </div>
-        <div class="clearfix"></div>
-      </div>
+                <input [matChipInputFor]="chipList">
+              </mat-form-field>
+            </mat-accordion>
 
 
-    </form>
+          </mat-card-content>
+        </mat-card>
 
-  </mat-card-content>
+        <mat-divider></mat-divider>
 
-</mat-card>
+        <mat-card>
+          <mat-card-content>
+            <button mat-raised-button color="primary" type="button" (click)="postPublish($event)">
+              Publish
+            </button>
+          </mat-card-content>
+        </mat-card>
+
+
+        <!-- ./button publish -->
+
+      </mat-accordion>
+
+    </div>
+
+  </form>
+</mat-accordion>
