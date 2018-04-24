@@ -1,7 +1,9 @@
 {
   "/wp-json": {
   "target": "http://wpdev.paultaku.tw",
-  "secure": false
+  "secure": false,
+  "logLevel": "debug",
+  "changeOrigin": true
  }
 }
 

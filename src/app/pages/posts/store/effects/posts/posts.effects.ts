@@ -23,6 +23,7 @@ import { PostsService } from '../../../posts/posts.service';
 import { WpuserService } from '../../../../../core/wpapi/wpuser.service';
 import { WpcategoriesService } from '../../../../../core/wpapi/wpcategories.service';
 import { WppostsService } from '../../../../../core/wpapi/wpposts.service';
+import { HttpResponse } from 'selenium-webdriver/http';
 
 @Injectable()
 export class PostsEffects {
@@ -45,6 +46,10 @@ export class PostsEffects {
     mergeMap( action => {
 
       return this._postSvc.list().pipe(
+
+        concatMap( (res: Response) => {
+          return of(res.body);
+        }),
 
         // author id 替換成 Wpuser
         concatMap(this.postsReplaceUser.bind(this)),
@@ -104,7 +109,6 @@ export class PostsEffects {
  * @memberof PostsEffects
  */
 postReplaceCategories(posts: WPpost[] ): Observable<any> {
-
     const categories = Array.from(
       new Set([
         ...posts.map(o => o.categories)
@@ -115,6 +119,9 @@ postReplaceCategories(posts: WPpost[] ): Observable<any> {
       .getCategoryList({
         include: categories
       }).pipe(
+
+        map((resp: any) => resp.body),
+
         map((cates: any[]) => {
 
 
@@ -140,25 +147,25 @@ postReplaceCategories(posts: WPpost[] ): Observable<any> {
  * @memberof PostsEffects
  */
 postsReplaceUser(posts): Observable<any> {
-
   const authors = Array.from(
     new Set([
       ...posts.map(o => o.author)
     ])
   ).join(',');
 
-
   return this._wpuser
     .getUserList({
       include: authors
     }).pipe(
+
+      map((resp: any) => resp.body),
+
       map((users: any[]) => {
         posts = posts.map(post => {
           const postUser = users.filter(user => user.id === post.author)[0];
           post.author = postUser;
           return post;
         });
-
         return posts;
       })
     );

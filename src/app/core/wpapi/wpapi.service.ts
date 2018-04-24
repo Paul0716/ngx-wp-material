@@ -30,7 +30,7 @@ export class WpapiService {
    */
   get(endpoint: string, query?: any): Observable<any> {
 
-    const ep        = `${environment.url}${endpoint}`;
+    const ep        = `/wp-json${endpoint}`;
     const user      = this._userSvc.getUser();
     const headers   = this._authSvc.getBasicAuthHeader(user);
 
@@ -44,12 +44,14 @@ export class WpapiService {
       return this._http.get(ep, {
         headers: headers,
         params: params,
+        observe: 'response',
       });
 
     } else {
 
       return this._http.get(ep, {
         headers: headers,
+        observe: 'response',
       });
 
     }
@@ -66,7 +68,7 @@ export class WpapiService {
    */
   post(endpoint: string, postData: any, query?: any): Observable<any> {
 
-    const ep = `${environment.url}${endpoint}`;
+    const ep = `/wp-json${endpoint}`;
 
     const user = this._userSvc.getUser();
     const headers = this._authSvc.getBasicAuthHeader(user);

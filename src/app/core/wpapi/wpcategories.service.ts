@@ -21,7 +21,8 @@ export class WpcategoriesService {
    */
   getCategoryList(query?: any): Observable<any> {
     const ep = '/wp/v2/categories';
-    return query ? this._wpapi.get(ep, { query: query }) : this._wpapi.get(ep);
+
+    return query ? this._wpapi.get(ep, query) : this._wpapi.get(ep);
   }
 
 }

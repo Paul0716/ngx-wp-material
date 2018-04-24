@@ -28,6 +28,9 @@ export class WpInterceptor implements HttpInterceptor {
 
       // 如果正常回傳
       if (event instanceof HttpResponse) {
+        // console.log(`url: ${event.url}`);
+        // console.log(`body: ${event.body}`);
+        // console.log(`headers: ${event.headers.get('x-wp-totalpages')}`);
         return event;
       }
 
