@@ -36,14 +36,13 @@ export class WpapiService {
 
     if (query) {
 
-      const params    = new HttpParams();
-      for (const key of Object.keys(query)) {
-        params.append( key, params[key] );
-      }
+      const params    = new HttpParams({
+        fromObject: query,
+      });
 
       return this._http.get(ep, {
         headers: headers,
-        params: params,
+        params,
         observe: 'response',
       });
 

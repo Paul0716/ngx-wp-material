@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { PageEvent } from '@angular/material';
 
 export enum PostsActionTypes {
   ListAction        = '[Posts] List Action',
@@ -15,6 +16,12 @@ export enum PostsActionTypes {
 
 export class List implements Action {
   readonly type = PostsActionTypes.ListAction;
+
+  private _pageEv: PageEvent;
+
+  constructor(ev?: PageEvent) {
+    this._pageEv = ev;
+  }
 }
 
 export class ListFailed implements Action {

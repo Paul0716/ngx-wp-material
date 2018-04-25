@@ -23,14 +23,13 @@ import { PostsService } from '../../../posts/posts.service';
 import { WpuserService } from '../../../../../core/wpapi/wpuser.service';
 import { WpcategoriesService } from '../../../../../core/wpapi/wpcategories.service';
 import { WppostsService } from '../../../../../core/wpapi/wpposts.service';
-import { HttpResponse } from 'selenium-webdriver/http';
 
 @Injectable()
 export class PostsEffects {
 
   constructor(
     private actions$: Actions,
-    private _postSvc: PostsService,
+    private _postsSvc: PostsService,
     private _wpuser: WpuserService,
     private _wpcate: WpcategoriesService,
     private _wpposts: WppostsService,
@@ -43,12 +42,23 @@ export class PostsEffects {
     ofType(PostsActionTypes.ListAction),
 
     // 實作文章列表取得資料的動作
-    mergeMap( action => {
+    mergeMap( (action: any) => {
+      console.log(`effects: `, action);
+      return this._wpposts.list({
+        status: ['publish', 'private', 'draft'].join(','),
+        page: action._pageEv ? action._pageEv.pageIndex + 1 : 1,
+      }).pipe(
 
-      return this._postSvc.list().pipe(
+        concatMap( (res:  Response) => {
 
-        concatMap( (res: Response) => {
-          return of(res.body);
+          const total = Number(res.headers.get('x-wp-total')) || 0;
+          const totalpages = Number(res.headers.get('x-wp-totalpages')) || 0;
+          const pagination = {
+            total: total,
+            totalpages: totalpages
+          };
+
+          return of({ posts: res.body, pagination: pagination });
         }),
 
         // author id 替換成 Wpuser
@@ -58,8 +68,8 @@ export class PostsEffects {
         concatMap(this.postReplaceCategories.bind(this)),
 
         // author 和 categories 換成字串
-        map( (posts: any[]) => {
-          return posts.map(post => {
+        map( (payload: any) => {
+          payload.posts.map(post => {
             const transPost = <any>post;
 
             transPost.categories = post.categories.map(o => o.name).join(',');
@@ -67,10 +77,12 @@ export class PostsEffects {
 
             return post;
           });
+
+          return payload;
         }),
 
         //
-        map(posts => ({ type: PostsActionTypes.ListSuccessAction, list: posts })),
+        map(resp => ({ type: PostsActionTypes.ListSuccessAction, payload: resp }) ),
 
         // http resposne 錯誤處理
         catchError( () => of({ type: PostsActionTypes.ListFailedAction }) )
@@ -104,16 +116,18 @@ export class PostsEffects {
 /**
  *
  *
- * @param {WPpost[]} posts
+ * @param {*} payload
  * @returns {Observable<any>}
  * @memberof PostsEffects
  */
-postReplaceCategories(posts: WPpost[] ): Observable<any> {
+postReplaceCategories(payload: any): Observable<any> {
+
+    const posts = payload.posts;
     const categories = Array.from(
-      new Set([
-        ...posts.map(o => o.categories)
-      ])
-    );
+      new Set(
+        ...posts.map(o => new Set(o.categories) )
+      )
+    ).join(',');
 
     return this._wpcate
       .getCategoryList({
@@ -125,14 +139,14 @@ postReplaceCategories(posts: WPpost[] ): Observable<any> {
         map((cates: any[]) => {
 
 
-          posts = posts.map(post => {
+          payload.posts = posts.map(post => {
             post.categories = post.categories.map(cate => {
               return cates.filter(o => o.id === cate)[0];
             });
             return post;
           });
 
-          return posts;
+          return payload;
         }),
     );
 
@@ -142,11 +156,13 @@ postReplaceCategories(posts: WPpost[] ): Observable<any> {
 /**
  *
  *
- * @param {any} posts
+ * @param {*} payload
  * @returns {Observable<any>}
  * @memberof PostsEffects
  */
-postsReplaceUser(posts): Observable<any> {
+postsReplaceUser(payload: any): Observable<any> {
+
+  const posts = payload.posts;
   const authors = Array.from(
     new Set([
       ...posts.map(o => o.author)
@@ -161,12 +177,12 @@ postsReplaceUser(posts): Observable<any> {
       map((resp: any) => resp.body),
 
       map((users: any[]) => {
-        posts = posts.map(post => {
+        payload.posts = posts.map(post => {
           const postUser = users.filter(user => user.id === post.author)[0];
           post.author = postUser;
           return post;
         });
-        return posts;
+        return payload;
       })
     );
 

@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 // ngrx
@@ -6,10 +8,11 @@ import { State as PostState, PostsAction } from '../store/reducers/posts/posts.r
 import * as PostsActions from '../store/actions/posts.actions';
 
 // ngx-material
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, PageEvent } from '@angular/material';
 
 // interface
 import { Post } from '../../../interfaces/post.interface';
+import { WPpagination } from '../../../interfaces/wp/pagination.interface';
 
 // service
 import { PostsService } from './posts.service';
@@ -20,6 +23,7 @@ import { WpcategoriesService } from '../../../core/wpapi/wpcategories.service';
 import { Observable } from 'rxjs/Observable';
 import { concatMap, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-posts',
@@ -28,6 +32,11 @@ import { of } from 'rxjs/observable/of';
 })
 export class PostsComponent implements OnInit, AfterViewInit {
 
+  /**
+   * 顯示讀取畫面
+   *
+   * @memberof PostsComponent
+   */
   public loading = true;
 
   /**
@@ -39,13 +48,24 @@ export class PostsComponent implements OnInit, AfterViewInit {
    */
   private _posts$: Observable<any>;
 
+  /**
+   * 分頁資訊物件
+   *
+   * @memberof PostsComponent
+   */
+  public postsInfo: WPpagination = {
+    total: null,
+    totalpages: null,
+    currentPage: 0,
+  };
+
 
   /**
    * list on material table
    *
    * @memberof PostsComponent
    */
-  postList: MatTableDataSource<Post>;
+  public postList: MatTableDataSource<Post>;
 
   /**
    * 表格要顯示的欄位
@@ -53,13 +73,22 @@ export class PostsComponent implements OnInit, AfterViewInit {
    * @type {String[]}
    * @memberof PostsComponent
    */
-  displayedColumns = [
+  public displayedColumns = [
     'id',
     'status',
     'title',
     'categories',
     'author'
   ];
+
+  /**
+   * 分頁元件訂閱動作
+   *
+   * @private
+   * @type {Subscription}
+   * @memberof PostsComponent
+   */
+  private _pagiSub$: Subscription;
 
 
   constructor(
@@ -70,22 +99,39 @@ export class PostsComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
-    this._store.pipe(
 
-      select('posts'),
+    this._store
+      .pipe(
+        select('posts'),
+      )
+      .subscribe( (res: any) => {
 
-      // map( (res: any) => res.list ),
+        // 如果有回傳文章的話
+        if (res && res.posts) {
 
-    ).subscribe( (res: PostsAction) => {
+          this.postList = new MatTableDataSource<Post>(res.posts);
 
-      // 如果有回傳文章的話
-      if (res && res.list) {
+          if (res.pagination) {
+            this.postsInfo.total = res.pagination.total;
+            this.postsInfo.totalpages = res.pagination.totalpages;
+            this.loading = false;
+          }
 
-        this.postList = new MatTableDataSource<Post>(res.list);
-      }
+        }
 
-    });
+      });
 
+  }
+
+  /**
+   *
+   *
+   * @param {any} ev
+   * @memberof PostsComponent
+   */
+  pageChangEvent(ev: PageEvent) {
+    this.loading = true;
+    this._store.dispatch(new PostsActions.List(ev));
   }
 
   ngAfterViewInit() {

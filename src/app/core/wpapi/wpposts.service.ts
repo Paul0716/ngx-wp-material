@@ -19,14 +19,26 @@ export class WppostsService {
   /**
    *
    *
-   * @param {any} postData - post data
-   * @param {any} [postId] - 文章ID, 新增文章時不需要此參數
+   * @param {*} postData - post data
+   * @param {*} [postId] - 文章ID, 新增文章時不需要此參數
    * @returns {Observable<any>}
    * @memberof WppostsService
    */
   editPost(postData: WPpost, postId?): Observable<any> {
     const endpoint = postId ? `/wp/v2/posts/${postId}` : '/wp/v2/posts';
     return this._wpapi.post(endpoint, postData);
+  }
+
+  /**
+   * 文章列表相關功能
+   *
+   * @param {*}
+   * @returns {Observable<any>}
+   * @memberof PostsService
+   */
+  list(query?: any): Observable<any> {
+    const ep = '/wp/v2/posts';
+    return query ? this._wpapi.get(ep, query) : this._wpapi.get(ep);
   }
 
 }

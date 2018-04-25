@@ -10,18 +10,21 @@ import { Post } from '../../../../../interfaces/post.interface';
 
 
 export interface State {
-  list?: Post[];
-  post?: Post;
+  posts: Post[];
 }
 
 export const initialState: State = {
-  list: [],
-  post: null,
+  posts: [],
 };
 
 export interface PostsAction extends Action {
-  list?: Post[];
-  post?: Post;
+  payload: {
+    posts: any[];
+    pagination?: {
+      total: number;
+      totalpages: number;
+    }
+  };
 }
 
 
@@ -31,22 +34,22 @@ export function reducer(state = initialState, action: PostsAction): State {
 
     case PostsActionTypes.CreatePostSuccessAction:
       return <State>{
-        post: action.post,
+        ...action.payload,
       };
 
     case PostsActionTypes.CreatePostFailedAction:
       return <State>{
-        post: null,
+        ...action.payload,
       };
 
     case PostsActionTypes.ListSuccessAction:
       return <State>{
-        list: action.list,
+        ...action.payload,
       };
 
     case PostsActionTypes.ListFailedAction:
       return <State>{
-        list: [],
+        ...action.payload,
       };
 
     default:

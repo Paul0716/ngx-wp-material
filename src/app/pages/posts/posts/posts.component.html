@@ -1,13 +1,10 @@
-<div class="">
-  <mat-progress-spinner
-    *ngIf="!postList.data.length"
-    mode="indeterminate"
-    diameter="100"
-    strokeWidth="3"
-    aria-label="pending for post list query"
-  ></mat-progress-spinner>
-</div>
-
+<mat-progress-spinner
+  *ngIf="loading"
+  mode="indeterminate"
+  diameter="50"
+  strokeWidth="3"
+  aria-label="pending for post list query"
+></mat-progress-spinner>
 
 <mat-accordion *ngIf="postList.data.length">
 
@@ -19,6 +16,7 @@
       [routerLink]="['./','new']">
       <mat-icon>add circle</mat-icon> New Post
     </button>
+
   </div>
 
   <mat-card>
@@ -69,6 +67,14 @@
 
       </mat-table>
 
+      <!-- paginator -->
+      <mat-paginator
+        *ngIf="postsInfo.totalpages"
+        [length]="postsInfo.total"
+        [pageIndex]="postsInfo.currentPage"
+        [pageSize]="10"
+        (page)="pageChangEvent($event)"
+      ></mat-paginator>
 
     </mat-card-content>
 
