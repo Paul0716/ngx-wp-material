@@ -9,6 +9,7 @@ import { appRoutePaths } from '../../app-routing-path.const';
 import { DashbroadComponent } from '../../pages/dashbroad/dashbroad.component';
 import { PostsComponent } from '../../pages/posts/posts/posts.component';
 import { LayoutComponent } from './layout.component';
+import { PageNotFoundComponent } from '../system/page-not-found/page-not-found.component';
 
 // service
 import { AuthGuardService } from '../../auth/auth-guard.service';
@@ -28,7 +29,7 @@ const layoutRoute: Route = {
       path: layoutRoutePaths.posts,
       canActivate: [ AuthGuardService ],
       loadChildren: '../../pages/posts/posts.module#PostsModule'
-    },
+    }
   ]
 };
 

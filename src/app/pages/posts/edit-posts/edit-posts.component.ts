@@ -1,7 +1,7 @@
 
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 // ngx-material
 import { MatDialog } from '@angular/material';
@@ -37,6 +37,7 @@ declare var ClassicEditor;
 })
 export class EditPostsComponent implements OnInit, OnDestroy {
 
+
   /**
    * 新增文章表單
    *
@@ -52,6 +53,15 @@ export class EditPostsComponent implements OnInit, OnDestroy {
    * @memberof EditPostsComponent
    */
   private _editor;
+
+  /**
+   * 文章 ID
+   *
+   * @private
+   * @type {number}
+   * @memberof EditPostsComponent
+   */
+  private _postId: number;
 
   /**
    * ckeditor 內容變更的訂閱物件
@@ -153,6 +163,7 @@ export class EditPostsComponent implements OnInit, OnDestroy {
     private _wpposts: WppostsService,
     private _wptag: WptagService,
     private _router: Router,
+    private _route: ActivatedRoute,
     private _store: Store<PostState>,
     private _dialog: MatDialog,
   ) { }
@@ -164,6 +175,12 @@ export class EditPostsComponent implements OnInit, OnDestroy {
    * @memberof EditPostsComponent
    */
   ngOnInit(): void {
+
+    this._route.paramMap.subscribe( (map: Params) => {
+      const postId = map.params.id;
+      this._store.dispatch(new PostsActions.Retrieve(postId));
+    });
+
     // editor init
     this.initForm();
 
@@ -175,8 +192,24 @@ export class EditPostsComponent implements OnInit, OnDestroy {
         select('posts')
       )
       .subscribe( (res: any) => {
-        if (res.post) {
+
+        if (res.posts && res.posts.length > 0) {
           this._router.navigate(['../']);
+        }
+
+        if (res.id) {
+
+          this._postId = res.id;
+
+          this.editPostForm.setValue({
+            title: res.title.rendered,
+            content: res.content.rendered,
+            status: res.status,
+            format: res.format,
+            tags: res.tags,
+          });
+          this._editor.setData(res.content.rendered);
+
         }
 
       });
@@ -201,9 +234,14 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 
     // destory ckeditor
-    this._editor.destroy();
+    if (this._editor) {
+      this._editor.destroy();
+    }
 
-    this._newPostContent.unsubscribe();
+    if (this._newPostContent) {
+      this._newPostContent.unsubscribe();
+    }
+
   }
 
 
@@ -272,7 +310,12 @@ export class EditPostsComponent implements OnInit, OnDestroy {
       const post = this.editPostForm.getRawValue();
       post.tags = post.tags.map(o => o = o.id);
 
-      this._store.dispatch(new PostsActions.Create(post));
+      if (this._postId) {
+        // this._store.dispatch(new PostsActions.Create(post));
+      } else {
+        this._store.dispatch(new PostsActions.Create(post));
+      }
+
 
 
     } else {
@@ -349,7 +392,7 @@ export class EditPostsComponent implements OnInit, OnDestroy {
     const ctrl = this.editPostForm.get('tags');
     const ctrlVal = ctrl.value;
 
-    if (!ctrlVal.filter( o => o.name == value ).length) {
+    if (!ctrlVal.filter( o => o.name === value ).length) {
       ctrlVal.push({
         ...tag
       });

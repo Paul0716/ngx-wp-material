@@ -43,7 +43,6 @@ export class PostsEffects {
 
     // 實作文章列表取得資料的動作
     mergeMap( (action: any) => {
-      console.log(`effects: `, action);
       return this._wpposts.list({
         status: ['publish', 'private', 'draft'].join(','),
         page: action._pageEv ? action._pageEv.pageIndex + 1 : 1,
@@ -57,7 +56,6 @@ export class PostsEffects {
             total: total,
             totalpages: totalpages
           };
-
           return of({ posts: res.body, pagination: pagination });
         }),
 
@@ -69,23 +67,22 @@ export class PostsEffects {
 
         // author 和 categories 換成字串
         map( (payload: any) => {
+
           payload.posts.map(post => {
             const transPost = <any>post;
-
-            transPost.categories = post.categories.map(o => o.name).join(',');
-            transPost.author = post.author.name;
+            transPost.categories  = post.categories.map(o => o.name).join(',');
+            transPost.author      = post.author.name;
 
             return post;
           });
 
-          return payload;
+          return ({ type: PostsActionTypes.ListSuccessAction, payload: payload });
         }),
 
-        //
-        map(resp => ({ type: PostsActionTypes.ListSuccessAction, payload: resp }) ),
-
         // http resposne 錯誤處理
-        catchError( () => of({ type: PostsActionTypes.ListFailedAction }) )
+        catchError( (err) => {
+          return of({ type: PostsActionTypes.ListFailedAction });
+        })
       );
 
     }),
@@ -103,6 +100,9 @@ export class PostsEffects {
 
       return this._wpposts.editPost(action.payload)
         .pipe(
+
+          map((resp: Response) => resp.body),
+
           // 新增文章成功處理
           map( post => ({ type: PostsActionTypes.CreatePostSuccessAction, post: post }) ),
 
@@ -110,81 +110,103 @@ export class PostsEffects {
           catchError( () => of({ type: PostsActionTypes.CreatePostFailedAction }) ),
         );
     }),
-    //
   );
 
-/**
- *
- *
- * @param {*} payload
- * @returns {Observable<any>}
- * @memberof PostsEffects
- */
-postReplaceCategories(payload: any): Observable<any> {
+  @Effect()
+  retrieve$: Observable<any> = this.actions$.pipe(
+    // 判斷為何種動作類型
+    ofType(PostsActionTypes.RetrievePostAction),
 
+    // 主要動作
+    mergeMap( (action: any) => {
+      return this._wpposts.retrievePost(action.payload.id)
+      .pipe(
+
+        map( (resp: Response) => resp.body ),
+
+        map(post => ({ type: PostsActionTypes.RetrievePostSuccessAction, payload: post })),
+
+        // error handler
+        catchError( () => of({ type: PostsActionTypes.RetrievePostFailedAction })),
+      );
+    }),
+
+  );
+
+  /**
+   *
+   *
+   * @param {*} payload
+   * @returns {Observable<any>}
+   * @memberof PostsEffects
+   */
+  postReplaceCategories(payload: any): Observable<any> {
+
+      const posts = payload.posts;
+      const arr = [];
+      posts.forEach( o => {
+        o.categories.forEach( cates => {
+          arr.push(cates);
+        });
+      });
+      const categories = Array.from(
+        new Set(arr)
+      ).join(',');
+
+      return this._wpcate
+        .getCategoryList({
+          include: categories
+        }).pipe(
+
+          map((resp: any) => resp.body),
+
+          map((cates: any[]) => {
+
+
+            payload.posts = posts.map(post => {
+              post.categories = post.categories.map(cate => {
+                return cates.filter(o => o.id === cate)[0];
+              });
+              return post;
+            });
+            return payload;
+          }),
+      );
+
+
+    }
+
+  /**
+   *
+   *
+   * @param {*} payload
+   * @returns {Observable<any>}
+   * @memberof PostsEffects
+   */
+  postsReplaceUser(payload: any): Observable<any> {
     const posts = payload.posts;
-    const categories = Array.from(
-      new Set(
-        ...posts.map(o => new Set(o.categories) )
-      )
+    const authors = Array.from(
+      new Set([
+        ...posts.map(o => o.author)
+      ])
     ).join(',');
 
-    return this._wpcate
-      .getCategoryList({
-        include: categories
+    return this._wpuser
+      .getUserList({
+        include: authors
       }).pipe(
 
         map((resp: any) => resp.body),
 
-        map((cates: any[]) => {
-
-
+        map((users: any[]) => {
           payload.posts = posts.map(post => {
-            post.categories = post.categories.map(cate => {
-              return cates.filter(o => o.id === cate)[0];
-            });
+            const postUser = users.filter(user => user.id === post.author)[0];
+            post.author = postUser;
             return post;
           });
-
           return payload;
-        }),
-    );
-
-
-  }
-
-/**
- *
- *
- * @param {*} payload
- * @returns {Observable<any>}
- * @memberof PostsEffects
- */
-postsReplaceUser(payload: any): Observable<any> {
-
-  const posts = payload.posts;
-  const authors = Array.from(
-    new Set([
-      ...posts.map(o => o.author)
-    ])
-  ).join(',');
-
-  return this._wpuser
-    .getUserList({
-      include: authors
-    }).pipe(
-
-      map((resp: any) => resp.body),
-
-      map((users: any[]) => {
-        payload.posts = posts.map(post => {
-          const postUser = users.filter(user => user.id === post.author)[0];
-          post.author = postUser;
-          return post;
-        });
-        return payload;
-      })
-    );
+        })
+      );
 
   }
 }

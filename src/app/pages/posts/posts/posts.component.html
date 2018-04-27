@@ -39,7 +39,24 @@
         <ng-container matColumnDef="title">
           <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
           <mat-cell *matCellDef="let element">
-            <a mat-button href="{{ element.guid.rendered }}" target="_blank"> {{ element.title.rendered }} </a>
+            {{ element.title.rendered }}
+              <a
+                class="action-btn"
+                mat-icon-button
+                color="basic"
+                href="{{ element.guid.rendered }}"
+                target="_blank">
+                <mat-icon>launch</mat-icon>
+              </a>
+              <a
+                class="action-btn"
+                mat-icon-button
+                color="basic"
+                [routerLink]="['./','edit', element.id]">
+                <mat-icon>edit</mat-icon>
+              </a>
+
+
           </mat-cell>
         </ng-container>
 

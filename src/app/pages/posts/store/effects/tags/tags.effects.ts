@@ -31,6 +31,7 @@ export class TagsEffects {
 
 
           // 如果成功回傳 ListSuccessAction
+          map( res => res.body),
           map( res => {
             return ({ type: TagsActionTypes.ListSuccessAction , payload: res });
           }),

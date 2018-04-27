@@ -30,7 +30,6 @@ import { WpInterceptor } from './interceptors/wp.interceptor';
     BrowserAnimationsModule,
     LoginModule,
     AuthModule,
-    PostsModule,
     AppRoutingModule,
     MaterialModule,
     StoreModule.forRoot(reducers, { metaReducers }),

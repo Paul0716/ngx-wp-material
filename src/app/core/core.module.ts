@@ -8,6 +8,7 @@ import { StorageModule } from './storage/storage.module';
 import { Ng2Webstorage } from 'ngx-webstorage';
 import { WpapiModule } from './wpapi/wpapi.module';
 import { DialogsModule } from './dialogs/dialogs.module';
+import { SystemModule } from './system/system.module';
 
 @NgModule({
   imports: [
@@ -18,8 +19,8 @@ import { DialogsModule } from './dialogs/dialogs.module';
     Ng2Webstorage,
     WpapiModule,
     DialogsModule,
+    SystemModule
   ],
-  declarations: [
-  ]
+  declarations: []
 })
 export class CoreModule { }

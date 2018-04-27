@@ -105,6 +105,7 @@ export class PostsComponent implements OnInit, AfterViewInit {
         select('posts'),
       )
       .subscribe( (res: any) => {
+        console.log(res);
 
         // 如果有回傳文章的話
         if (res && res.posts) {
@@ -126,13 +127,14 @@ export class PostsComponent implements OnInit, AfterViewInit {
   /**
    *
    *
-   * @param {any} ev
+   * @param {*} ev
    * @memberof PostsComponent
    */
   pageChangEvent(ev: PageEvent) {
     this.loading = true;
     this._store.dispatch(new PostsActions.List(ev));
   }
+
 
   ngAfterViewInit() {
 

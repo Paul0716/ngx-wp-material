@@ -41,4 +41,22 @@ export class WppostsService {
     return query ? this._wpapi.get(ep, query) : this._wpapi.get(ep);
   }
 
+  /**
+   * 取得單一文章的資料
+   *
+   * @param {any} postId
+   * @returns {Observable<any>}
+   * @memberof WppostsService
+   */
+  retrievePost(postId): Observable<any> {
+    if (postId) {
+      const ep = `/wp/v2/posts/${postId}`;
+      return this._wpapi.get(ep);
+    } else {
+      throw new Error('Retrieve a post require post id.');
+    }
+  }
+
+
+
 }

@@ -6,12 +6,17 @@ export enum PostsActionTypes {
   ListSuccessAction = '[Posts] List Success Action',
   ListFailedAction  = '[Posts] List Failed Action',
 
-  CreatePostAction  = '[Posts] Create Post Action',
-  CreatePostFailedAction = '[Posts] Create Post Failed Action',
+  CreatePostAction        = '[Posts] Create Post Action',
+  CreatePostFailedAction  = '[Posts] Create Post Failed Action',
   CreatePostSuccessAction = '[Posts] Create Post Success Action',
 
+  RetrievePostAction        = '[Posts] Retrieve Post Action',
+  RetrievePostSuccessAction = '[Posts] Retrieve Post Success Action',
+  RetrievePostFailedAction  = '[Posts] Retrieve Post Failed Action',
 
-  EditPostAction    = '[Posts] Edit Post Action',
+  EditPostAction            = '[Posts] Edit Post Action',
+  EditPostSuccessAction     = '[Posts] Edit Post Success Action',
+  EditPostFailedAction      = '[Posts] Edit Post Failed Action'
 }
 
 export class List implements Action {
@@ -51,10 +56,40 @@ export class CreateSuccess implements Action {
   readonly type = PostsActionTypes.CreatePostSuccessAction;
 }
 
+export class Retrieve implements Action {
+  readonly type = PostsActionTypes.RetrievePostAction;
+  readonly payload: any;
+
+  constructor(postId) {
+    this.payload = {
+      id: postId,
+    };
+  }
+}
+
+export class RetrieveSuccess implements Action {
+  readonly type = PostsActionTypes.RetrievePostSuccessAction;
+}
+
+export class RetrieveFailed implements Action {
+  readonly type = PostsActionTypes.RetrievePostFailedAction;
+}
+
 export class Edit implements Action {
   readonly type = PostsActionTypes.EditPostAction;
+  readonly payload: any;
 
-  constructor(post) {}
+  constructor(post) {
+    this.payload = post;
+  }
+}
+
+export class EditFailed implements Action {
+  readonly type = PostsActionTypes.EditPostFailedAction;
+}
+
+export class EditSuccess implements Action {
+  readonly type = PostsActionTypes.EditPostSuccessAction;
 }
 
 

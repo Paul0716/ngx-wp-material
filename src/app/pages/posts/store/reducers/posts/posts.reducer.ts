@@ -30,6 +30,8 @@ export interface PostsAction extends Action {
 
 
 export function reducer(state = initialState, action: PostsAction): State {
+
+
   switch (action.type) {
 
     case PostsActionTypes.CreatePostSuccessAction:
@@ -38,6 +40,16 @@ export function reducer(state = initialState, action: PostsAction): State {
       };
 
     case PostsActionTypes.CreatePostFailedAction:
+      return <State>{
+        ...action.payload,
+      };
+
+    case PostsActionTypes.RetrievePostSuccessAction:
+      return <State>{
+        ...action.payload,
+      };
+
+    case PostsActionTypes.RetrievePostFailedAction:
       return <State>{
         ...action.payload,
       };
