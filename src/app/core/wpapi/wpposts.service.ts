@@ -57,6 +57,22 @@ export class WppostsService {
     }
   }
 
+  /**
+   * 刪除 wp post api 功能
+   *
+   * @param {any} postId
+   * @returns {Observable<any>}
+   * @memberof WppostsService
+   */
+  deletePost(postId): Observable<any> {
+    if (postId) {
+      const ep = `/wp/v2/posts/${postId}`;
+      return this._wpapi.delete(ep);
+    } else {
+      throw new Error('Delete a post require post id.');
+    }
+  }
+
 
 
 }

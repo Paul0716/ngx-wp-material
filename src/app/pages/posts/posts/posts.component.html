@@ -6,14 +6,14 @@
   aria-label="pending for post list query"
 ></mat-progress-spinner>
 
-<mat-accordion *ngIf="postList.data.length">
+<mat-accordion *ngIf="postList && postList.data.length">
 
   <div class="button-row">
     <button
       mat-raised-button
       color="primary"
       type="button"
-      [routerLink]="['./','new']">
+      [routerLink]="['../new']">
       <mat-icon>add circle</mat-icon> New Post
     </button>
 
@@ -43,6 +43,8 @@
               <a
                 class="action-btn"
                 mat-icon-button
+                matTooltip="Preview Post on new page"
+                matTooltipShowDelay="1000"
                 color="basic"
                 href="{{ element.guid.rendered }}"
                 target="_blank">
@@ -51,11 +53,22 @@
               <a
                 class="action-btn"
                 mat-icon-button
-                color="basic"
-                [routerLink]="['./','edit', element.id]">
+                 matTooltip="Edit Post"
+                [routerLink]="['../edit', element.id]"
+                matTooltipShowDelay="1000"
+                color="basic">
                 <mat-icon>edit</mat-icon>
               </a>
-
+              <button
+                type="button"
+                class="action-btn"
+                mat-icon-button
+                matTooltip="Delete Post"
+                matTooltipShowDelay="1000"
+                (click)="deleteConfirm($event, element)"
+                color="basic">
+                <mat-icon>delete</mat-icon>
+              </button>
 
           </mat-cell>
         </ng-container>

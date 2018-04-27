@@ -124,10 +124,35 @@ export class PostsEffects {
 
         map( (resp: Response) => resp.body ),
 
-        map(post => ({ type: PostsActionTypes.RetrievePostSuccessAction, payload: post })),
+        map( post => ({ type: PostsActionTypes.RetrievePostSuccessAction, payload: post })),
 
         // error handler
         catchError( () => of({ type: PostsActionTypes.RetrievePostFailedAction })),
+      );
+    }),
+  );
+
+  @Effect()
+  delete$: Observable<any> = this.actions$.pipe(
+    // 判斷是哪種動作類型
+    ofType(PostsActionTypes.DeletePostAction),
+
+    // 主要動作
+    mergeMap( (action: any) => {
+      return this._wpposts.deletePost(action.payload)
+      .pipe(
+
+        map( (resp: Response) => resp.body ),
+
+        map( post => {
+
+          console.log(post);
+
+          return ({ type: PostsActionTypes.DeletePostSuccessAction, payload: post })
+        }),
+
+        // error handler
+        catchError( () => of({ type: PostsActionTypes.DeletePostFailedAction }) )
       );
     }),
 

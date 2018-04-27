@@ -13,27 +13,33 @@ import { EditPostsComponent } from './edit-posts/edit-posts.component';
 // service
 import { AuthGuardService } from '../../auth/auth-guard.service';
 
+const defaultRoute: Route = {
+  path: '**',
+  redirectTo: postsRoutingPaths.root,
+  pathMatch: 'full'
+};
 
 const postsRoute: Route = {
   path: postsRoutingPaths.root,
   children: [
     {
-      path: postsRoutingPaths.root,
-      component: PostsComponent,
+      path: postsRoutingPaths.edit,
+      component: EditPostsComponent,
     },
     {
       path: postsRoutingPaths.new,
       component: EditPostsComponent,
     },
     {
-      path: postsRoutingPaths.edit,
-      component: EditPostsComponent,
-    }
+      path: postsRoutingPaths.list,
+      component: PostsComponent,
+    },
   ]
 };
 
 const routes: Routes = [
   postsRoute,
+  defaultRoute
 ];
 
 @NgModule({

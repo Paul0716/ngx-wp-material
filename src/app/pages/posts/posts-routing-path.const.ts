@@ -2,8 +2,9 @@ export const postsRoutingPaths = {
 
   root: '',
 
-  new: 'new',
+  list: 'list',
 
+  new: 'new',
 
   edit: 'edit/:id',
 

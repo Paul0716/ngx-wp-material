@@ -5,14 +5,19 @@ import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 
 // component
-import { MatListModule } from '@angular/material';
+import { CofirmComponent } from './cofirm/cofirm.component';
+import { MaterialModule } from '../material/material.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatListModule,
+    MaterialModule,
   ],
-  declarations: [],
-  entryComponents: [],
+  declarations: [
+    CofirmComponent
+  ],
+  entryComponents: [
+    CofirmComponent
+  ],
 })
 export class DialogsModule { }

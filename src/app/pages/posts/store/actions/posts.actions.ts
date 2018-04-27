@@ -16,7 +16,11 @@ export enum PostsActionTypes {
 
   EditPostAction            = '[Posts] Edit Post Action',
   EditPostSuccessAction     = '[Posts] Edit Post Success Action',
-  EditPostFailedAction      = '[Posts] Edit Post Failed Action'
+  EditPostFailedAction      = '[Posts] Edit Post Failed Action',
+
+  DeletePostAction            = '[Posts] Delete Post Action',
+  DeletePostSuccessAction     = '[Posts] Delete Post Success Action',
+  DeletePostFailedAction      = '[Posts] Delete Post Failed Action',
 }
 
 export class List implements Action {
@@ -92,6 +96,23 @@ export class EditSuccess implements Action {
   readonly type = PostsActionTypes.EditPostSuccessAction;
 }
 
+export class Delete implements Action {
+  readonly type = PostsActionTypes.DeletePostAction;
+  readonly payload: any;
+
+  constructor(postId) {
+    this.payload = postId;
+  }
+}
+
+export class DeleteSuccess implements Action {
+  readonly type = PostsActionTypes.DeletePostSuccessAction;
+}
+
+export class DeleteFailed implements Action {
+  readonly type = PostsActionTypes.DeletePostFailedAction;
+}
+
 
 
 export type PostsActions =
@@ -99,4 +120,12 @@ List |
 ListFailed |
 ListSuccess |
 Create |
-Edit;
+CreateSuccess |
+CreateFailed |
+Edit |
+EditSuccess |
+EditFailed |
+Delete |
+DeleteSuccess |
+DeleteFailed
+;

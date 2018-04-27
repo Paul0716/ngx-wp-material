@@ -93,4 +93,23 @@ export class WpapiService {
     }
   }
 
+  /**
+   * wp delete method api abstract
+   *
+   * @param {string} endpoint
+   * @returns {Observable<any>}
+   * @memberof WpapiService
+   */
+  delete(endpoint: string): Observable<any> {
+
+    const ep = `/wp-json${endpoint}`;
+    const user = this._userSvc.getUser();
+    const headers = this._authSvc.getBasicAuthHeader(user);
+
+    return this._http.delete(ep, {
+      headers: headers,
+      observe: 'response',
+    });
+  }
+
 }

@@ -1,6 +1,7 @@
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
-
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { CofirmComponent } from '../../../core/dialogs/cofirm/cofirm.component';
 
 // ngrx
 import { Store, select } from '@ngrx/store';
@@ -8,7 +9,7 @@ import { State as PostState, PostsAction } from '../store/reducers/posts/posts.r
 import * as PostsActions from '../store/actions/posts.actions';
 
 // ngx-material
-import { MatTableDataSource, PageEvent } from '@angular/material';
+import { MatTableDataSource, PageEvent, MatDialog } from '@angular/material';
 
 // interface
 import { Post } from '../../../interfaces/post.interface';
@@ -30,7 +31,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss'],
 })
-export class PostsComponent implements OnInit, AfterViewInit {
+export class PostsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * 顯示讀取畫面
@@ -38,15 +39,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
    * @memberof PostsComponent
    */
   public loading = true;
-
-  /**
-   * store posts list
-   *
-   * @private
-   * @type {Observable<any>}
-   * @memberof PostsComponent
-   */
-  private _posts$: Observable<any>;
 
   /**
    * 分頁資訊物件
@@ -90,34 +82,49 @@ export class PostsComponent implements OnInit, AfterViewInit {
    */
   private _pagiSub$: Subscription;
 
+  /**
+   * store posts list
+   *
+   * @private
+   * @type {Observable<any>}
+   * @memberof PostsComponent
+   */
+  private _posts$: Subscription;
+
 
   constructor(
     private _store: Store<PostState>,
+    private _router: Router,
+    private _route: ActivatedRoute,
     private _wpuser: WpuserService,
     private _wpcate: WpcategoriesService,
     private _postsSvc: PostsService,
+    private _dialog: MatDialog,
   ) { }
 
   ngOnInit() {
 
-    this._store
+    this._posts$ = this._store
       .pipe(
         select('posts'),
       )
       .subscribe( (res: any) => {
-        console.log(res);
-
         // 如果有回傳文章的話
         if (res && res.posts) {
 
           this.postList = new MatTableDataSource<Post>(res.posts);
-
           if (res.pagination) {
             this.postsInfo.total = res.pagination.total;
             this.postsInfo.totalpages = res.pagination.totalpages;
             this.loading = false;
           }
 
+        }
+
+        // 如果是刪除成功回傳 post
+        if (res && res.status === 'trash') {
+          this.loading = true;
+          this._store.dispatch(new PostsActions.List());
         }
 
       });
@@ -133,6 +140,48 @@ export class PostsComponent implements OnInit, AfterViewInit {
   pageChangEvent(ev: PageEvent) {
     this.loading = true;
     this._store.dispatch(new PostsActions.List(ev));
+  }
+
+  /**
+   *
+   *
+   * @memberof PostsComponent
+   */
+  editor(id: number) {
+    this._router.navigate(['../edit', id], { relativeTo: this._route });
+  }
+
+  /**
+   *
+   * @param {MouseEvent} ev
+   * @param {*} post
+   * @memberof PostsComponent
+   */
+  deleteConfirm(ev: MouseEvent, post: any) {
+    const dialogRef = this._dialog.open(CofirmComponent, {
+      width: '480px',
+      data: {
+        title: 'Confirm',
+        content: `About to delete post <b>${post.title.rendered}</b>`,
+        id: post.id,
+      }
+    });
+
+    const dialog$ = dialogRef.afterClosed().subscribe( result => {
+      this._store.dispatch( new PostsActions.Delete(result.id) );
+      dialog$.unsubscribe();
+    });
+  }
+
+  /**
+   * On Destroy
+   *
+   * @memberof PostsComponent
+   */
+  ngOnDestroy() {
+    if (this._pagiSub$) {
+      this._posts$.unsubscribe();
+    }
   }
 
 

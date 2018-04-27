@@ -51,7 +51,7 @@ export class LayoutComponent implements OnInit {
    * @memberof LayoutComponent
    */
   getRouterLink(path: String) {
-    return [ appRoutePaths.layout, path];
+    // return [ appRoutePaths.layout, path];
   }
 
 

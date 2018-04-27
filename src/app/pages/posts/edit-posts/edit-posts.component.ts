@@ -82,6 +82,15 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   /**
    *
    *
+   * @private
+   * @type {Subscription}
+   * @memberof EditPostsComponent
+   */
+  private _post$: Subscription;
+
+  /**
+   *
+   *
    * @type {Option[]}
    * @memberof EditPostsComponent
    */
@@ -177,24 +186,29 @@ export class EditPostsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this._route.paramMap.subscribe( (map: Params) => {
-      const postId = map.params.id;
-      this._store.dispatch(new PostsActions.Retrieve(postId));
+      console.log(map.params);
+      // editor init
+      this.ckEditorInit();
+      this.initForm();
+
+      if ( Object.keys(map.params).length > 0 ) {
+        const postId = map.params.id;
+        this._store.dispatch(new PostsActions.Retrieve(postId));
+      }
     });
-
-    // editor init
-    this.initForm();
-
-    this.ckEditorInit();
+    // console.log(this._route.snapshot.queryParams);
 
 
-    this._store
+
+
+    this._post$ = this._store
       .pipe(
         select('posts')
       )
       .subscribe( (res: any) => {
 
         if (res.posts && res.posts.length > 0) {
-          this._router.navigate(['../']);
+          // this._router.navigate(['../list']);
         }
 
         if (res.id) {
@@ -235,11 +249,17 @@ export class EditPostsComponent implements OnInit, OnDestroy {
 
     // destory ckeditor
     if (this._editor) {
+      console.log('editor destory.');
+      this._editor.model.destroy();
       this._editor.destroy();
     }
 
     if (this._newPostContent) {
       this._newPostContent.unsubscribe();
+    }
+
+    if (this._post$) {
+      this._post$.unsubscribe();
     }
 
   }
@@ -253,6 +273,7 @@ export class EditPostsComponent implements OnInit, OnDestroy {
    * @memberof EditPostsComponent
    */
   initForm(): void {
+    console.log(`initForm.`);
     this.editPostForm = this._fb.group({
       title: [ '', [ Validators.required ] ],
       content: [ '', [ Validators.required ] ],
@@ -268,13 +289,16 @@ export class EditPostsComponent implements OnInit, OnDestroy {
    * @memberof EditPostsComponent
    */
   ckEditorInit() {
+    console.log('ckeditor init.');
     const editorEl = document.querySelector('#ckeditor');
     ClassicEditor
       .create(editorEl)
       .then( editor => {
 
-        this.bindingCKEditor(editor);
         this._editor = editor;
+        this.bindingCKEditor(editor);
+
+
 
       })
       .catch(error => console.error );
@@ -290,7 +314,6 @@ export class EditPostsComponent implements OnInit, OnDestroy {
     this._newPostContent = Observable.
       fromEvent(editor.model.document, 'change')
       .subscribe( writer => {
-
         this.editPostForm.patchValue({
           content: this._editor.getData(),
         });

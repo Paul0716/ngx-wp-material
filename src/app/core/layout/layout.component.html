@@ -30,8 +30,8 @@
       <mat-nav-list>
         <a
           mat-list-item
-          [routerLink]="getRouterLink('dashbroad')">Dashbroad</a>
-        <a mat-list-item [routerLink]="getRouterLink('posts')">Posts</a>
+          [routerLink]="['/dashbroad']">Dashbroad</a>
+        <a mat-list-item [routerLink]="['/posts', 'list']">Posts</a>
         <a mat-list-item (click)="logout()">Logout</a>
         <!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
         <!-- <a mat-list-item routerLink="/numberLucky">數字運勢</a>

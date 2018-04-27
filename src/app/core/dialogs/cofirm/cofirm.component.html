@@ -1,0 +1,25 @@
+<mat-accordion>
+
+  <h3>{{ title }}</h3>
+  <div class="content">
+    <p [innerHTML]="content"></p>
+  </div>
+
+  <div class="button-row">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="confirm()">
+      Confirm
+    </button>
+    <button
+      mat-raised-button
+      color="basic"
+      type="button"
+      (click)="close()">
+      Cancel
+    </button>
+  </div>
+
+</mat-accordion>

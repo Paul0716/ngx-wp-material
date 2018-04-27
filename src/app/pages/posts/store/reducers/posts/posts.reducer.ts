@@ -39,19 +39,14 @@ export function reducer(state = initialState, action: PostsAction): State {
         ...action.payload,
       };
 
-    case PostsActionTypes.CreatePostFailedAction:
-      return <State>{
-        ...action.payload,
-      };
-
     case PostsActionTypes.RetrievePostSuccessAction:
       return <State>{
         ...action.payload,
       };
 
-    case PostsActionTypes.RetrievePostFailedAction:
+    case PostsActionTypes.DeletePostSuccessAction:
       return <State>{
-        ...action.payload,
+        ...action.payload
       };
 
     case PostsActionTypes.ListSuccessAction:
@@ -59,10 +54,6 @@ export function reducer(state = initialState, action: PostsAction): State {
         ...action.payload,
       };
 
-    case PostsActionTypes.ListFailedAction:
-      return <State>{
-        ...action.payload,
-      };
 
     default:
       return state;

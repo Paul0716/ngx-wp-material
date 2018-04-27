@@ -12,20 +12,12 @@ import { LoginComponent } from './login/login.component';
 import { layoutRoutePaths } from './core/layout/layout-routing-path.const';
 
 
-const loginRoute: Route = {
-  path: 'login',
-  component: LoginComponent,
-};
-
-// 沒有定義的Route，全部都會導回首頁處理
 const fallbackRoute: Route = {
   path: '**',
-  redirectTo: appRoutePaths.layout + '/' + layoutRoutePaths.dashbroad,
-  pathMatch: 'full',
+  redirectTo: appRoutePaths.layout + '/' + layoutRoutePaths.dashbroad, pathMatch: 'full'
 };
 
 const routes: Routes = [
-  loginRoute,
 ];
 
 @NgModule({
